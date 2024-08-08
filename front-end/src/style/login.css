@@ -21,9 +21,10 @@ body::before {
   position: absolute;
   width: 100%;
   height: 100%;
-  /* background: url("../img/backgroundLogin.jpg"); */
+  background: url("../assets/night-abstract-blue-technology-stripes-Cable-25632-wallhere.com.jpg");
   background-position: center;
   background-size: cover;
+
 }
 
 .wrapper {
@@ -45,7 +46,7 @@ form {
 h2 {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: #fff;
+  color:black;
 }
 
 .input-field {
@@ -59,7 +60,7 @@ h2 {
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  color: #fff;
+  color:black;
   font-size: 18px;
   pointer-events: none;
   transition: 0.15s ease;
@@ -72,7 +73,7 @@ h2 {
   border: none;
   outline: none;
   font-size: 20px;
-  color: #fff;
+  color:black;
 }
 
 .input-field input:focus~label,
@@ -87,7 +88,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   margin: 25px 0 35px 0;
-  color: #fff;
+  color:black;
 }
 
 #remember {
@@ -104,7 +105,7 @@ h2 {
 }
 
 .wrapper a {
-  color: #efefef;
+  color:black;
   text-decoration: none;
 }
 
@@ -114,7 +115,7 @@ h2 {
 
 button {
   background-color: none;
-  color: white;
+  color:black;
   font-weight: 600;
   border: none;
   padding: 16px 20px;
@@ -127,7 +128,7 @@ button {
 }
 
 button:hover {
-  color: #fff;
+  color:black;
   border-color: #fff;
   background: rgba(255, 255, 255, 0.15);
 }
@@ -135,7 +136,7 @@ button:hover {
 .register {
   text-align: center;
   margin-top: 30px;
-  color: #fff;
+  color:black;
   /* CSS khác đã có */
 }
 .wrapper .logo {
