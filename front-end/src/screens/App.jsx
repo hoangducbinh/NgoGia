@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import Header from './Header';
-import Sidebar from './Sidebar';
-import Home from './Home';
-import Home2 from './Home2';
-import FormXuatKho from './screens/FormXuatKho';
+import '../style/App.css';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import Home from '../components/Home';
+import Home2 from '../components/Home2';
+import FormXuatKho from './FormXuatKho';
 
 
 function App() {

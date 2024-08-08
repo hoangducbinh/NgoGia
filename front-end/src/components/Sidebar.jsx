@@ -3,7 +3,7 @@ import
 {   BsGrid1X2Fill,  BsFillGrid3X3GapFill, BsPeopleFill, 
   BsListCheck, BsMenuButtonWideFill, BsFillGearFill,BsCardText}
  from 'react-icons/bs'
-import logo from './assets/logo.png'
+import logo from '../assets/logo.png'
 
 function Sidebar({openSidebarToggle, OpenSidebar}) {
   return (
