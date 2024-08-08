@@ -2,6 +2,7 @@ using back_end.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using back_end.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +18,13 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<ApplicationDBContext>();
+builder.Services.AddIdentity<Employee, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddDefaultTokenProviders();
+
+// builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+//     .AddEntityFrameworkStores<ApplicationDBContext>();
+
 
 var app = builder.Build();
 
@@ -30,8 +36,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapIdentityApi<IdentityUser>();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
+
 
 
 

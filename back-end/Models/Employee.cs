@@ -9,11 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace back_end.Models
 {
-    public class Employee : IdentityUser
+    public class Employee: IdentityUser
     {
         public int EmployeeID { get; set; }
-        public string EmployeeName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Position { get; set; }
+        public required string EmployeeName { get; set; }
+        public required string Position { get; set; }
     }
 }

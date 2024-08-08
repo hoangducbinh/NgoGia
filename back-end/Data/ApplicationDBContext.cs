@@ -10,7 +10,7 @@ using back_end.Models;
 
 namespace back_end.Data
 {
-    public class ApplicationDBContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDBContext : IdentityDbContext<Employee>
     {
          public ApplicationDBContext(DbContextOptions options) : base(options) { }
 

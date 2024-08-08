@@ -12,7 +12,7 @@ using back_end.Data;
 namespace back_end.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240808040824_init")]
+    [Migration("20240808071502_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -231,7 +231,6 @@ namespace back_end.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
