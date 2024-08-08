@@ -20,7 +20,7 @@ private readonly ApplicationDBContext _context;
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<IEnumerable<Inventory>>> GetInventories()
     {
         return await _context.Inventories.Include(i => i.Product)
@@ -28,7 +28,7 @@ private readonly ApplicationDBContext _context;
                                          .ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetbyId/{id}")]
     public async Task<ActionResult<Inventory>> GetInventory(int id)
     {
         var inventory = await _context.Inventories.Include(i => i.Product)
@@ -41,7 +41,7 @@ private readonly ApplicationDBContext _context;
         return inventory;
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<Inventory>> CreateInventory(Inventory inventory)
     {
         _context.Inventories.Add(inventory);
@@ -49,7 +49,7 @@ private readonly ApplicationDBContext _context;
         return CreatedAtAction(nameof(GetInventory), new { id = inventory.InventoryID }, inventory);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdateInventory(int id, Inventory inventory)
     {
         if (id != inventory.InventoryID)
@@ -75,7 +75,7 @@ private readonly ApplicationDBContext _context;
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteInventory(int id)
     {
         var inventory = await _context.Inventories.FindAsync(id);

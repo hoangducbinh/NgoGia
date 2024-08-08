@@ -20,14 +20,14 @@ private readonly ApplicationDBContext _context;
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<IEnumerable<TaxDetail>>> GetTaxDetails()
     {
         return await _context.TaxDetails.Include(td => td.Invoice)
                                         .ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetbyId/{id}")]
     public async Task<ActionResult<TaxDetail>> GetTaxDetail(int id)
     {
         var taxDetail = await _context.TaxDetails.Include(td => td.Invoice)
@@ -39,7 +39,7 @@ private readonly ApplicationDBContext _context;
         return taxDetail;
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<TaxDetail>> CreateTaxDetail(TaxDetail taxDetail)
     {
         _context.TaxDetails.Add(taxDetail);
@@ -47,7 +47,7 @@ private readonly ApplicationDBContext _context;
         return CreatedAtAction(nameof(GetTaxDetail), new { id = taxDetail.TaxDetailID }, taxDetail);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdateTaxDetail(int id, TaxDetail taxDetail)
     {
         if (id != taxDetail.TaxDetailID)
@@ -73,7 +73,7 @@ private readonly ApplicationDBContext _context;
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteTaxDetail(int id)
     {
         var taxDetail = await _context.TaxDetails.FindAsync(id);

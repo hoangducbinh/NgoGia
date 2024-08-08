@@ -22,13 +22,13 @@ namespace back_end.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
             return await _context.Customers.ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetbyId/{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
@@ -39,7 +39,7 @@ namespace back_end.Controllers
             return customer;
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
         {
             _context.Customers.Add(customer);
@@ -47,7 +47,7 @@ namespace back_end.Controllers
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.CustomerID }, customer);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, Customer customer)
         {
             if (id != customer.CustomerID)
@@ -73,7 +73,7 @@ namespace back_end.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);

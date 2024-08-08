@@ -21,14 +21,14 @@ public class InvoicesController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
     {
         return await _context.Invoices.Include(i => i.Order)
                                       .ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetbyId/{id}")]
     public async Task<ActionResult<Invoice>> GetInvoice(int id)
     {
         var invoice = await _context.Invoices.Include(i => i.Order)
@@ -40,7 +40,7 @@ public class InvoicesController : ControllerBase
         return invoice;
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice)
     {
         _context.Invoices.Add(invoice);
@@ -48,7 +48,7 @@ public class InvoicesController : ControllerBase
         return CreatedAtAction(nameof(GetInvoice), new { id = invoice.InvoiceID }, invoice);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdateInvoice(int id, Invoice invoice)
     {
         if (id != invoice.InvoiceID)
@@ -74,7 +74,7 @@ public class InvoicesController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteInvoice(int id)
     {
         var invoice = await _context.Invoices.FindAsync(id);

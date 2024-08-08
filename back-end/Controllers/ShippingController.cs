@@ -20,14 +20,14 @@ private readonly ApplicationDBContext _context;
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<IEnumerable<Shipping>>> GetShippings()
     {
         return await _context.Shippings.Include(s => s.Order)
                                        .ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetbyId/{id}")]
     public async Task<ActionResult<Shipping>> GetShipping(int id)
     {
         var shipping = await _context.Shippings.Include(s => s.Order)
@@ -39,7 +39,7 @@ private readonly ApplicationDBContext _context;
         return shipping;
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<Shipping>> CreateShipping(Shipping shipping)
     {
         _context.Shippings.Add(shipping);
@@ -47,7 +47,7 @@ private readonly ApplicationDBContext _context;
         return CreatedAtAction(nameof(GetShipping), new { id = shipping.ShippingID }, shipping);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdateShipping(int id, Shipping shipping)
     {
         if (id != shipping.ShippingID)
@@ -73,7 +73,7 @@ private readonly ApplicationDBContext _context;
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteShipping(int id)
     {
         var shipping = await _context.Shippings.FindAsync(id);

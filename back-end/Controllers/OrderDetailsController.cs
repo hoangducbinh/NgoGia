@@ -22,7 +22,7 @@ public class OrderDetailsController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrderDetails()
     {
         return await _context.OrderDetails.Include(od => od.Product)
@@ -30,7 +30,7 @@ public class OrderDetailsController : ControllerBase
                                           .ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetbyId/{id}")]
     public async Task<ActionResult<OrderDetail>> GetOrderDetail(int id)
     {
         var orderDetail = await _context.OrderDetails.Include(od => od.Product)
@@ -43,7 +43,7 @@ public class OrderDetailsController : ControllerBase
         return orderDetail;
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<OrderDetail>> CreateOrderDetail(OrderDetail orderDetail)
     {
         _context.OrderDetails.Add(orderDetail);
@@ -51,7 +51,7 @@ public class OrderDetailsController : ControllerBase
         return CreatedAtAction(nameof(GetOrderDetail), new { id = orderDetail.OrderDetailID }, orderDetail);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdateOrderDetail(int id, OrderDetail orderDetail)
     {
         if (id != orderDetail.OrderDetailID)
@@ -77,7 +77,7 @@ public class OrderDetailsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteOrderDetail(int id)
     {
         var orderDetail = await _context.OrderDetails.FindAsync(id);

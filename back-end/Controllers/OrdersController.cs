@@ -20,13 +20,13 @@ public class OrdersController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
     {
         return await _context.Orders.Include(o => o.OrderDetails).ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetbyId/{id}")]
     public async Task<ActionResult<Order>> GetOrder(int id)
     {
         var order = await _context.Orders.Include(o => o.OrderDetails)
@@ -38,7 +38,7 @@ public class OrdersController : ControllerBase
         return order;
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<Order>> CreateOrder(Order order)
     {
         _context.Orders.Add(order);
@@ -46,7 +46,7 @@ public class OrdersController : ControllerBase
         return CreatedAtAction(nameof(GetOrder), new { id = order.OrderID }, order);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdateOrder(int id, Order order)
     {
         if (id != order.OrderID)
@@ -72,7 +72,7 @@ public class OrdersController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteOrder(int id)
     {
         var order = await _context.Orders.FindAsync(id);

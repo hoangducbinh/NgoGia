@@ -23,13 +23,13 @@ public class WarehousesController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouses()
     {
         return await _context.Warehouses.ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetbyId/{id}")]
     public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
     {
         var warehouse = await _context.Warehouses.FindAsync(id);
@@ -40,7 +40,7 @@ public class WarehousesController : ControllerBase
         return warehouse;
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<ActionResult<Warehouse>> CreateWarehouse(Warehouse warehouse)
     {
         _context.Warehouses.Add(warehouse);
@@ -48,7 +48,7 @@ public class WarehousesController : ControllerBase
         return CreatedAtAction(nameof(GetWarehouse), new { id = warehouse.WarehouseID }, warehouse);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdateWarehouse(int id, Warehouse warehouse)
     {
         if (id != warehouse.WarehouseID)
@@ -74,7 +74,7 @@ public class WarehousesController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteWarehouse(int id)
     {
         var warehouse = await _context.Warehouses.FindAsync(id);

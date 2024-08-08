@@ -20,13 +20,13 @@ namespace back_end.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return await _context.Products.ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetbyId/{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -37,7 +37,7 @@ namespace back_end.Controllers
             return product;
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<ActionResult<Product>> CreateProduct(Product product)
         {
             _context.Products.Add(product);
@@ -45,7 +45,7 @@ namespace back_end.Controllers
             return CreatedAtAction(nameof(GetProduct), new { id = product.ProductID }, product);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
             if (id != product.ProductID)
@@ -71,7 +71,7 @@ namespace back_end.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
