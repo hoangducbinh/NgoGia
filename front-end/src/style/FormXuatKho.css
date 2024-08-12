@@ -6,7 +6,9 @@
   height: auto;
   color: black;
 }
-
+.container{
+  color:black;
+}
 .header1 {
   display: flex;
   justify-content: space-between;

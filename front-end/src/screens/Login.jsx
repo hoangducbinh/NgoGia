@@ -15,8 +15,8 @@ const Login = ({ setIsLoggedIn }) => {
 
     if (username === fakeUsername && password === fakePassword) {
       setIsLoggedIn(true);
-      alert('Đăng nhập thành công!');
-      navigate('/home');
+      // navigate('/home'); 
+      window.location.href = '/home';
     } else {
       alert('Tài khoản hoặc mật khẩu không đúng!');
     }

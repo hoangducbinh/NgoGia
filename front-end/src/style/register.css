@@ -1,34 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
-}
-
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  width: 100%;
-  padding: 0 10px;
-}
-
-body::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: url("../assets/night-abstract-blue-technology-stripes-Cable-25632-wallhere.com.jpg");
-  background-position: center;
-  background-size: cover;
-}
+/* Sao chép nội dung từ login.css và chỉnh sửa nếu cần */
 
 .wrapper {
   width: 600px; 
-  min-height:100px;
+  min-height: 100px;
   border-radius: 8px;
   padding: 30px;
   text-align: center;
@@ -45,7 +19,7 @@ form {
 h2 {
   font-size: 2rem;
   margin-bottom: 20px;
-  color:black;
+  color: black;
 }
 
 .input-field {
@@ -59,7 +33,7 @@ h2 {
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  color:black;
+  color: black;
   font-size: 18px;
   pointer-events: none;
   transition: 0.15s ease;
@@ -72,7 +46,7 @@ h2 {
   border: none;
   outline: none;
   font-size: 20px;
-  color:black;
+  color: black;
 }
 
 .input-field input:focus~label,
@@ -82,39 +56,9 @@ h2 {
   transform: translateY(-120%);
 }
 
-.forget {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 25px 0 35px 0;
-  color:black;
-}
-
-#remember {
-  accent-color: #fff;
-}
-
-.forget label {
-  display: flex;
-  align-items: center;
-}
-
-.forget label p {
-  margin-left: 8px;
-}
-
-.wrapper a {
-  color:black;
-  text-decoration: none;
-}
-
-.wrapper a:hover {
-  text-decoration: underline;
-}
-
 button {
   background-color: none;
-  color:black;
+  color: black;
   font-weight: 600;
   border: none;
   padding: 16px 20px;
@@ -123,29 +67,24 @@ button {
   font-size: 16px;
   border: 2px solid gray;
   transition: 0.3s ease;
-  height:100px;
+  height: 100px;
 }
 
 button:hover {
-  color:black;
+  color: black;
   border-color: #fff;
   background: rgba(255, 255, 255, 0.15);
 }
 
-.register {
-  text-align: center;
-  margin-top: 30px;
-  color:black;
-  /* CSS khác đã có */
-}
 .wrapper .logo {
   text-align: center;
   margin-bottom: 20px;
 }
 
 .wrapper .logo img {
-  max-width: 200px; /* Điều chỉnh kích thước logo theo ý muốn */
+  max-width: 200px;
 }
-.btn-submit{
+
+.btn-submit {
   font-size: 30px;
 }

@@ -2,9 +2,24 @@ import React, { useState } from 'react';
 import '../style/FormXuatKho.css';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MyDocument from './PDFDocument'; 
+import { PDFDownloadLink } from '@react-pdf/renderer';
+// import jsPDF from 'jspdf';
+// import 'jspdf-autotable';
 
 const FormXuatKho = () => {
   const [rows, setRows] = useState([]);
+    const [formData, setFormData] = useState({
+   nguoimua: '',
+   tenkhachhang: '',
+   diachi: '',
+   mathue: '',
+  dienthoai: '',
+  mota: '',
+  nguoiban: '',
+  ngay: '',
+ 
+  });
   const [devices] = useState([
     { id: 1, code: '1', name: 'Máy lạnh', unit: 'cái', quantity: 10, price: 200, total: "2,000" },
     { id: 2, code: '2', name: 'Máy giặt', unit: 'cái', quantity: 20, price: 400, total: "8,000 "},
@@ -17,7 +32,10 @@ const FormXuatKho = () => {
   const handleAddRow = () => {
     setRows([...rows, { id: rows.length + 1, data: ['', '', '', '', '', ''] }]);
   };
-
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
   const handleInputChange = (rowId, index, value) => {
     const formattedValue = formatNumber(value);
     setRows(rows.map(row =>
@@ -70,8 +88,10 @@ const FormXuatKho = () => {
     });
 };
 
+
   return (
     <div className="invoice-container">
+      <form>
       <div className="company-info">
         <p><strong>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CÔNG NGHỆ NGÔ GIA</strong></p>
         <p>137/12/4A Đường ĐHT 06, Phường Tân Hưng Thuận, Quận 12, Thành phố Hồ Chí Minh, Việt Nam</p>
@@ -81,13 +101,13 @@ const FormXuatKho = () => {
       <h2>PHIẾU XUẤT KHO BÁN HÀNG</h2>
       <div className="header1">
         <div className="left">
-          <p><strong>Người mua:</strong> <input type="text" /></p>
-          <p><strong>Tên khách hàng:</strong> <input type="text" /></p>
-          <p><strong>Địa chỉ:</strong> <input type="text" /></p>
-          <p><strong>Mã số thuế:</strong> <input type="text" /></p>
-          <p><strong>Điện thoại:</strong> <input type="text" /></p>
-          <p><strong>Diễn giải:</strong> <input type="text" /></p>
-          <p><strong>Nhân viên bán hàng:</strong> <input type="text" /></p>
+          <p><strong>Người mua:</strong> <input type="text" name="nguoimua" value={formData.nguoimua}  onChange={handleChange}/></p>
+          <p><strong>Tên khách hàng:</strong> <input type="text" name="tenkhachhang" value={formData.tenkhachhang} onChange={handleChange} /></p>
+          <p><strong>Địa chỉ:</strong> <input type="text" name="diachi" value={formData.diachi} onChange={handleChange} /></p>
+          <p><strong>Mã số thuế:</strong> <input type="text" name="mathue" value={formData.mathue}  onChange={handleChange}/></p>
+          <p><strong>Điện thoại:</strong> <input type="text" name="dienthoai" value={formData.dienthoai}  onChange={handleChange}/></p>
+          <p><strong>Diễn giải:</strong> <input type="text" name="mota" value={formData.mota}  onChange={handleChange}/></p>
+          <p><strong>Nhân viên bán hàng:</strong> <input type="text" name="nguoiban" value={formData.nguoiban} onChange={handleChange} /></p>
         </div>
         <div className="right">
           <p><strong>Ngày:</strong> <input type="text" /></p>
@@ -187,8 +207,17 @@ const FormXuatKho = () => {
           <p>(Ký, họ tên, đóng dấu)</p>
         </div>
       </div>
+      </form>
+             <PDFDownloadLink
+        document={<MyDocument formData={formData} />}
+       fileName="phieu-xuat-ban-hang.pdf"
+      >
+        {({ loading }) => (loading ? 'Đang tạo PDF...' : 'Tải xuống PDF')}
+       </PDFDownloadLink>
     </div>
   );
 };
 
 export default FormXuatKho;
+
+
