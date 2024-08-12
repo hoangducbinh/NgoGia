@@ -157,6 +157,20 @@ h2 {
 .btn-delete:hover{
   color:red;
 }  
+.pdf-download-container {
+  display: inline-block;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.pdf-download-container:hover {
+  background-color: #45a049;
+}
+
 @media screen and (max-width: 600px) {
   .header1 {
     flex-direction: column;

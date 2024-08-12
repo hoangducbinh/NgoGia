@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 10,
   },
-
   title: {
     fontFamily: 'Roboto',
     fontSize: 16,
@@ -36,17 +35,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontSize: 12,
     marginBottom: 5,
-  },
-  textRight: {
-    textAlign: 'right',
-  },
-  formInfo: {
-    flex: 1,
-  },
-  rightSection: {
-    flex: 1,
-    textAlign: 'right',
-    paddingLeft: 20,
   },
   table: {
     display: 'table',
@@ -99,60 +87,69 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontSize: 12,
   },
-  
 });
-const  PDFDocument = ({ formData }) => (
-  <Document>
-    <Page style={styles.page} size={'A4'}>
-    <View style={styles.companyInfo}>
-    <Text style={styles.text}>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CÔNG NGHỆ NGÔ GIA</Text>
-        <Text style={styles.text}>137/12/4A Đường ĐHT 06, Phường Tân Hưng Thuận, Quận 12, Thành phố Hồ Chí Minh, Việt Nam</Text>
-        <Text style={styles.text}>Mã số thuế: 0312403318</Text>
-        <Text style={styles.text}>Tel: 0906 717 944</Text>
-       
-      </View>
-      <Text style={styles.title}>PHIẾU XUẤT KHO BÁN HÀNG</Text>
-      {/* <Text style={styles.title}>Thông tin nhập liệu</Text> */}
-      <View style={styles.section}>
-        <Text style={styles.text}>Người mua: {formData.nguoimua}</Text>
-        <Text style={styles.text}>Tên khách hàng: {formData.tenkhachhang}</Text>
-        <Text style={styles.text}>Địa chỉ: {formData.diachi}</Text>
-        <Text style={styles.text}>Mã số thuế: {formData.mathue}</Text>
-        <Text style={styles.text}>Số điện thoại: {formData.dienthoai}</Text>
-        <Text style={styles.text}>Diễn giải: {formData.mota}</Text>
-        <Text style={styles.text}>Nhân viên bán hàng: {formData.nguoiban}</Text>
-        {/* <Text style={styles.text}>Ngày: {formData.ngay}</Text> */}
-        {/* <Text style={styles.text}>Số: {formData.number}</Text> */}
-      </View>
-      <View style={styles.table}>
-        <View style={[styles.tableRow, styles.tableHeader]}>
-          <Text style={styles.tableCol}>Mã hàng</Text>
-          <Text style={styles.tableCol}>Tên hàng</Text>
-          <Text style={styles.tableCol}>Đơn vị tính</Text>
-          <Text style={styles.tableCol}>Số lượng</Text>
-          <Text style={styles.tableCol}>Đơn giá</Text>
-          <Text style={styles.tableCol}>Thành tiền</Text>
+
+const PDFDocument = ({ formData, rows }) => {
+  return (
+    <Document>
+      <Page style={styles.page} size="A4">
+        <View style={styles.companyInfo}>
+          <Text style={styles.text}>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CÔNG NGHỆ NGÔ GIA</Text>
+          <Text style={styles.text}>137/12/4A Đường ĐHT 06, Phường Tân Hưng Thuận, Quận 12, Thành phố Hồ Chí Minh, Việt Nam</Text>
+          <Text style={styles.text}>Mã số thuế: 0312403318</Text>
+          <Text style={styles.text}>Tel: 0906 717 944</Text>
         </View>
+        <Text style={styles.title}>PHIẾU XUẤT KHO BÁN HÀNG</Text>
+
+        <View style={styles.section}>
+          <Text style={styles.text}>Người mua: {formData.nguoimua}</Text>
+          <Text style={styles.text}>Tên khách hàng: {formData.tenkhachhang}</Text>
+          <Text style={styles.text}>Địa chỉ: {formData.diachi}</Text>
+          <Text style={styles.text}>Mã số thuế: {formData.mathue}</Text>
+          <Text style={styles.text}>Số điện thoại: {formData.dienthoai}</Text>
+          <Text style={styles.text}>Diễn giải: {formData.mota}</Text>
+          <Text style={styles.text}>Nhân viên bán hàng: {formData.nguoiban}</Text>
         </View>
-      
+
+        <View style={styles.table}>
+          <View style={[styles.tableRow, styles.tableHeader]}>
+            <Text style={styles.tableCol}>Mã hàng</Text>
+            <Text style={styles.tableCol}>Tên hàng</Text>
+            <Text style={styles.tableCol}>Đơn vị tính</Text>
+            <Text style={styles.tableCol}>Số lượng</Text>
+            <Text style={styles.tableCol}>Đơn giá</Text>
+            <Text style={styles.tableCol}>Thành tiền</Text>
+          </View>
+          {rows && rows.length > 0 && rows.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.tableRow}>
+              {row.data && row.data.map((cell, cellIndex) => (
+                <Text key={cellIndex} style={styles.tableCol}>
+                  {cell}
+                </Text>
+              ))}
+            </View>
+          ))}
+        </View>
+
         <View style={styles.section1}>
-  <View style={styles.left}>
-    <Text style={styles.text1}>Người mua hàng</Text>
-    <Text style={styles.text2}>(Ký, họ tên)</Text>
-  </View>
+          <View style={styles.left}>
+            <Text style={styles.text1}>Người mua hàng</Text>
+            <Text style={styles.text2}>(Ký, họ tên)</Text>
+          </View>
+          <View style={styles.mid}>
+            <Text style={styles.text1}>Kế toán trưởng</Text>
+            <Text style={styles.text2}>(Ký, họ tên)</Text>
+          </View>
+          <View style={styles.right}>
+            <Text style={styles.text1}>Giám đốc</Text>
+            <Text style={styles.text2}>(Ký, họ tên, đóng dấu)</Text>
+          </View>
+        </View>
+      </Page>
+    </Document>
+  )
 
-  <View style={styles.mid}>
-    <Text style={styles.text1}>Kế toán trưởng</Text>
-    <Text style={styles.text2}>(Ký, họ tên)</Text>
-  </View>
 
-  <View style={styles.right}>
-    <Text style={styles.text1}>Giám đốc</Text>
-    <Text style={styles.text2}>(Ký, họ tên)</Text>
-  </View>
-</View>
-    </Page>
-  </Document>
-);
+};
 
 export default PDFDocument;
