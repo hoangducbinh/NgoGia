@@ -240,7 +240,7 @@ const FormXuatKho = () => {
     ngay: '',
   });
   const [devices] = useState([
-    { id: 1, code: '1', name: 'Máy lạnh', unit: 'cái', quantity: 10, price: 200, total: "2,000" },
+    { id: 1, code: 'DL-JW35VF', name: 'Máy lạnh Mitsubishi Electric Inverter 1.5 HP MSY-JW 35VF', unit: 'cái', quantity: 10, price: 200, total: "2,000" },
     { id: 2, code: '2', name: 'Máy giặt', unit: 'cái', quantity: 20, price: 400, total: "8,000" },
     { id: 3, code: '3', name: 'Tủ lạnh', unit: 'cái', quantity: 5, price: 300, total: "1,500" },
     { id: 4, code: '4', name: 'Tủ đông', unit: 'cái', quantity: 15, price: 500, total: "7,500" },

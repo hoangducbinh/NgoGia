@@ -1,10 +1,11 @@
 import React from 'react';
 import { Font, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
-import robotoFont from '../assets/Roboto/Roboto-Regular.ttf';
+import timesNewRomanFont from '../assets/Font/Times New Roman.ttf'; // Adjust the path as necessary
 
+// Register the "Times New Roman" font
 Font.register({
-  family: 'Roboto',
-  src: robotoFont,
+  family: 'Times New Roman',
+  src: timesNewRomanFont,
 });
 
 const styles = StyleSheet.create({
@@ -13,12 +14,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   companyInfo: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Times New Roman',
     fontSize: 12,
     marginBottom: 10,
   },
   title: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Times New Roman',
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 10,
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   text: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Times New Roman',
     fontSize: 12,
     marginBottom: 5,
   },
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
     display: 'table',
     width: 'auto',
     marginTop: 10,
-    fontFamily: 'Roboto',
+    fontFamily: 'Times New Roman',
   },
   tableRow: {
     flexDirection: 'row',
@@ -50,8 +51,12 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#000',
-    fontSize: 12,
+    fontSize: 10,
     textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'nowrap',
   },
   tableHeader: {
     backgroundColor: '#f0f0f0',
@@ -79,12 +84,12 @@ const styles = StyleSheet.create({
     width: '30%',
   },
   text1: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Times New Roman',
     fontSize: 12,
     marginBottom: 10,
   },
   text2: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Times New Roman',
     fontSize: 12,
   },
 });
@@ -147,9 +152,7 @@ const PDFDocument = ({ formData, rows }) => {
         </View>
       </Page>
     </Document>
-  )
-
-
+  );
 };
 
 export default PDFDocument;
