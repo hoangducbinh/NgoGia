@@ -11,20 +11,6 @@ const Login = ({ setIsLoggedIn }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    const fakeUsername = 'hiep123';
-    const fakePassword = '123';
-    const fakeName = 'Hiệp Thái';
-    if (username === fakeUsername && password === fakePassword) {
-      setIsLoggedIn(true);
-      localStorage.setItem('isLoggedIn', 'true'); // Lưu trạng thái đăng nhập vào localStorage
-      localStorage.setItem('username',fakeName);
-      console.log('Login success');
-      alert('Đăng nhập thành công!');
-      navigate('/home'); // Điều hướng đến trang Home
-    } else {
-      alert('Tài khoản hoặc mật khẩu không đúng!');
-=======
 
     try {
       // Gọi API để xác thực người dùng
@@ -56,7 +42,6 @@ const Login = ({ setIsLoggedIn }) => {
         setError('Đã xảy ra lỗi. Vui lòng kiểm tra kết nối mạng.');
       }
       console.error('Lỗi đăng nhập:', error);
->>>>>>> a113fa2a2fd4fa4c8cb934e31391af0117e23ef6
     }
   };
 
