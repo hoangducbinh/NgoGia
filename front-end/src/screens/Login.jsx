@@ -9,14 +9,15 @@ const Login = ({ setIsLoggedIn }) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Tài khoản giả
     const fakeUsername = 'hiep123';
     const fakePassword = '123';
 
     if (username === fakeUsername && password === fakePassword) {
       setIsLoggedIn(true);
-      // navigate('/home'); 
-      window.location.href = '/home';
+      localStorage.setItem('isLoggedIn', 'true'); // Lưu trạng thái đăng nhập vào localStorage
+      console.log('Login success');
+      alert('Đăng nhập thành công!');
+      navigate('/home'); // Điều hướng đến trang Home
     } else {
       alert('Tài khoản hoặc mật khẩu không đúng!');
     }
@@ -36,7 +37,7 @@ const Login = ({ setIsLoggedIn }) => {
             value={username} 
             onChange={(e) => setUsername(e.target.value)} 
           />
-          <label>Tài khoản</label>
+          <label htmlFor="username">Tài khoản</label>
         </div>
         <div className="input-field">
           <input 
@@ -45,7 +46,7 @@ const Login = ({ setIsLoggedIn }) => {
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
           />
-          <label>Mật khẩu</label>
+          <label htmlFor="password">Mật khẩu</label>
         </div>
         <button 
           type="submit" 

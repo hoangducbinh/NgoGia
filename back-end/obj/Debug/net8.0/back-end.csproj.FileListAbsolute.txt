@@ -146,3 +146,4 @@ C:\Users\HoangDucBinh\Documents\Big_Project\back-end\bin\Debug\net8.0\Microsoft.
 C:\Users\HoangDucBinh\Documents\Big_Project\back-end\bin\Debug\net8.0\back-end.staticwebassets.runtime.json
 C:\Users\HoangDucBinh\Documents\Big_Project\back-end\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
 C:\Users\HoangDucBinh\Documents\Big_Project\back-end\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Users\HoangDucBinh\Documents\Big_Project\back-end\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

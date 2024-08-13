@@ -150,6 +150,7 @@ body {
   justify-content: space-around;
   padding: 8px 15px;
   border-radius: 5px;
+  height:200px;
 }
 
 .card:first-child {
