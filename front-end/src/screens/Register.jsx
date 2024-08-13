@@ -1,27 +1,23 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "../style/register.css"; // Sử dụng file CSS mới
+import '../style/register.css'; // Đảm bảo rằng bạn có tệp CSS tương ứng
 
 const Register = () => {
-  const [fullName, setFullName] = useState('');
+  const [fullname, setFullname] = useState('');
   const [cccd, setCccd] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
-    // Kiểm tra điều kiện đăng ký (ví dụ, mật khẩu phải khớp)
-    if (password === confirmPassword) {
-      alert('Đăng ký thành công!');
-      navigate('/home');
-    } else {
-      alert('Mật khẩu không khớp!');
-    }
+    // Bạn có thể thêm logic để xử lý đăng ký ở đây
+
+    alert('Đăng ký thành công!');
+    navigate('/login');
   };
 
   return (
@@ -35,8 +31,8 @@ const Register = () => {
           <input 
             type="text" 
             required 
-            value={fullName} 
-            onChange={(e) => setFullName(e.target.value)} 
+            value={fullname} 
+            onChange={(e) => setFullname(e.target.value)} 
           />
           <label>Họ tên</label>
         </div>
@@ -47,14 +43,14 @@ const Register = () => {
             value={cccd} 
             onChange={(e) => setCccd(e.target.value)} 
           />
-          <label>CCCD</label>
+          <label>Số CCCD</label>
         </div>
         <div className="input-field">
           <input 
             type="text" 
             required 
-            value={phoneNumber} 
-            onChange={(e) => setPhoneNumber(e.target.value)} 
+            value={phone} 
+            onChange={(e) => setPhone(e.target.value)} 
           />
           <label>Số điện thoại</label>
         </div>
@@ -93,15 +89,6 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)} 
           />
           <label>Mật khẩu</label>
-        </div>
-        <div className="input-field">
-          <input 
-            type="password" 
-            required 
-            value={confirmPassword} 
-            onChange={(e) => setConfirmPassword(e.target.value)} 
-          />
-          <label>Xác nhận mật khẩu</label>
         </div>
         <button 
           type="submit" 
