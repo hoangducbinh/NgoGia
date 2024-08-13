@@ -72,28 +72,21 @@
 .invoice-table th,
 .invoice-table td {
   border: 1px solid black;
-  padding: 8px;
-  text-align: left;
-  padding: 10px;
-  word-wrap: break-word;
+  width: 10%;
+  /* height:100px; */
 }
 
 .invoice-table textarea {
-  width: 100%;
-  padding: 5px;
-  font-size: 1em;
-  box-sizing: border-box;
-  background-color: transparent;
-  word-wrap: break-word;
-  color: black;
-  
-  border-top: none;
-  border-right: none;
-  border-left: none;
-  border-bottom: none;
+  /* width: auto;
+  height: auto; */
+  height:100px;
+  border: none;
   resize: none;
-  overflow-wrap: break-word;
-  min-height: 30px;
+  overflow: hidden; /* Ẩn thanh cuộn */
+  box-sizing: border-box;
+  padding: 0; /* Loại bỏ padding mặc định */
+  margin: 0; /* Loại bỏ margin mặc định */
+  word-wrap: break-word;
 }
 
 .invoice-table textarea:focus {
