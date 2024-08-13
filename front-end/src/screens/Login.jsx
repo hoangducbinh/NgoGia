@@ -11,10 +11,11 @@ const Login = ({ setIsLoggedIn }) => {
     e.preventDefault();
     const fakeUsername = 'hiep123';
     const fakePassword = '123';
-
+    const fakeName = 'Hiệp Thái';
     if (username === fakeUsername && password === fakePassword) {
       setIsLoggedIn(true);
       localStorage.setItem('isLoggedIn', 'true'); // Lưu trạng thái đăng nhập vào localStorage
+      localStorage.setItem('username',fakeName);
       console.log('Login success');
       alert('Đăng nhập thành công!');
       navigate('/home'); // Điều hướng đến trang Home
