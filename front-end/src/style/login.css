@@ -6,7 +6,7 @@
   box-sizing: border-box;
   font-family: "Open Sans", sans-serif;
 }
-
+/* 
 body {
   display: flex;
   align-items: center;
@@ -25,9 +25,13 @@ body::before {
   background-position: center;
   background-size: cover;
 
-}
+} */
 
 .wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 600px; 
   min-height:100px;
   border-radius: 8px;
