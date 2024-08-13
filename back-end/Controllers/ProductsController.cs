@@ -45,6 +45,7 @@ namespace back_end.Controllers
             return CreatedAtAction(nameof(GetProduct), new { id = product.ProductID }, product);
         }
 
+
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
