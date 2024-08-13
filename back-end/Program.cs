@@ -13,6 +13,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173") // Thay đổi thành nguồn gốc của ứng dụng của bạn
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // Cho phép gửi cookie và thông tin xác thực
+    });
+});
+
+
+
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 
@@ -73,7 +89,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

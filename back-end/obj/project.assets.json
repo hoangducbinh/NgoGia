@@ -4741,19 +4741,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\asus\\.nuget\\packages\\": {}
+    "C:\\Users\\HoangDucBinh\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Visual Studio Code\\NgoGia\\back-end\\back-end.csproj",
+      "projectUniqueName": "C:\\Users\\HoangDucBinh\\Documents\\Big_Project\\back-end\\back-end.csproj",
       "projectName": "back-end",
-      "projectPath": "D:\\Visual Studio Code\\NgoGia\\back-end\\back-end.csproj",
-      "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-      "outputPath": "D:\\Visual Studio Code\\NgoGia\\back-end\\obj\\",
+      "projectPath": "C:\\Users\\HoangDucBinh\\Documents\\Big_Project\\back-end\\back-end.csproj",
+      "packagesPath": "C:\\Users\\HoangDucBinh\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HoangDucBinh\\Documents\\Big_Project\\back-end\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\HoangDucBinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
