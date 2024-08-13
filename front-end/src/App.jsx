@@ -5,7 +5,7 @@ import Header from '../src/components/Header';
 import Sidebar from '../src/components/Sidebar';
 import Home from '../src/components/Home';
 import Home2 from '../src/components/Home2';
-import FormXuatKho from '../src/screens/FormXuatKho';
+import FormXuatKho from '../src/components/FormXuatKho';
 import Login from '../src/screens/Login';
 
 function App() {
