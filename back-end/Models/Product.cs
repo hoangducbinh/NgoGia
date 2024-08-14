@@ -11,5 +11,7 @@ namespace back_end.Models
         public string ProductName { get; set; }
         public string Unit { get; set; }
         public decimal Price { get; set; }
+        public int CategoryProductID { get; set; }
+        public CategoryProduct CategoryProduct { get; set; }
     }
 }

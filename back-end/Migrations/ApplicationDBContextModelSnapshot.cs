@@ -155,6 +155,23 @@ namespace back_end.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("back_end.Models.CategoryProduct", b =>
+                {
+                    b.Property<int>("CategoryProductID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryProductID"));
+
+                    b.Property<string>("CategoryProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CategoryProductID");
+
+                    b.ToTable("CategoryProducts");
+                });
+
             modelBuilder.Entity("back_end.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerID")
@@ -374,6 +391,9 @@ namespace back_end.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductID"));
 
+                    b.Property<int>("CategoryProductID")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -386,6 +406,8 @@ namespace back_end.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductID");
+
+                    b.HasIndex("CategoryProductID");
 
                     b.ToTable("Products");
                 });
@@ -569,6 +591,17 @@ namespace back_end.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("back_end.Models.Product", b =>
+                {
+                    b.HasOne("back_end.Models.CategoryProduct", "CategoryProduct")
+                        .WithMany()
+                        .HasForeignKey("CategoryProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CategoryProduct");
                 });
 
             modelBuilder.Entity("back_end.Models.Shipping", b =>
