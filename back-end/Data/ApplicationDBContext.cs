@@ -24,6 +24,8 @@ namespace back_end.Data
         public DbSet<Shipping> Shippings { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<TaxDetail> TaxDetails { get; set; }
+        public DbSet<CategoryProduct> CategoryProducts { get; set; }
+
 
     }
 }

@@ -1,82 +1,48 @@
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify } from 'react-icons/bs';
 
 function Header({ OpenSidebar }) {
-  const [name, setName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const storedName = localStorage.getItem('username'); // Retrieve username from localStorage
-    setName(storedName);
-  }, []);
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    // Implement search functionality here
+    console.log('Searching for:', searchQuery);
+  };
 
   return (
-    <header className='header'>
-      <div className='menu-icon'>
-        <BsJustify className='icon' onClick={OpenSidebar} />
+    <header className='flex items-center justify-between p-4 bg-blue-800 text-white shadow-lg'>
+      <div className='flex items-center'>
+        <BsJustify 
+          className='text-2xl cursor-pointer hover:text-gray-200 transition-colors duration-300' 
+          onClick={OpenSidebar} 
+        />
       </div>
-      <div className='header-left'>
-        <BsSearch className='icon' />
+      <div className='flex items-center flex-1 mx-4'>
+        <form onSubmit={handleSearchSubmit} className='relative flex items-center w-full max-w-md ml-auto'>
+          <input
+            type='text'
+            placeholder='Search...'
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className='w-full px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300'
+          />
+          <button type='submit' className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 transition-colors duration-300'>
+            <BsSearch className='text-xl' />
+          </button>
+        </form>
       </div>
-      <div className='header-right'>
-        {/* <BsFillBellFill className='icon'/>
-        <BsFillEnvelopeFill className='icon'/> */}
-        <BsPersonCircle className='icon' />
-        {name && <span className='username' style={{ color: 'white' }}>{name}</span>}
+      <div className='flex items-center space-x-4'>
+        <BsFillBellFill className='text-xl cursor-pointer hover:text-gray-200 transition-colors duration-300' />
+        <BsFillEnvelopeFill className='text-xl cursor-pointer hover:text-gray-200 transition-colors duration-300' />
+        <BsPersonCircle className='text-xl cursor-pointer hover:text-gray-200 transition-colors duration-300' />
       </div>
     </header>
   );
 }
 
 export default Header;
-
-
-// import { useState, useEffect } from 'react';
-// import { BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify, BsCaretDown } from 'react-icons/bs';
-// import { useNavigate } from 'react-router-dom';
-
-// function Header({ OpenSidebar }) {
-//   const [name, setName] = useState('');
-//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const storedName = localStorage.getItem('username'); // Retrieve username from localStorage
-//     setName(storedName);
-//   }, []);
-//  useEffect(() => {
-
-//  });
-//   const handleLogout = () => {
-//     localStorage.removeItem('isLoggedIn');
-//     localStorage.removeItem('username');
-//     setName(''); // Clear name state
-//     navigate('/login'); // Redirect to Login page
-//   };
-
-//   return (
-//     <header className='header'>
-//       <div className='menu-icon'>
-//         <BsJustify className='icon' onClick={OpenSidebar} />
-//       </div>
-//       <div className='header-left'>
-//         <BsSearch className='icon' />
-//       </div>
-//       <div className='header-right'>
-//         {/* <BsFillBellFill className='icon'/>
-//         <BsFillEnvelopeFill className='icon'/> */}
-//         <div className='user-menu' onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-//           <BsPersonCircle className='icon' />
-//           <span className='username' style={{ color: 'white' }}>{name}</span>
-//           <BsCaretDown className='icon' />
-//           {isDropdownOpen && (
-//             <div className='dropdown-menu'>
-//               <button onClick={handleLogout}>Logout</button>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </header>
-//   );
-// }
-
-// export default Header;
