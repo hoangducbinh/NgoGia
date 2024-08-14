@@ -50,7 +50,7 @@ function App() {
                   <Header OpenSidebar={OpenSidebar} />
                   <main className="flex-1 p-4 bg-gray-100">
                     <Routes>
-                    <Route path="/formxuatkho" element={<FormXuatKho />} />
+                      <Route path="/formxuatkho" element={<FormXuatKho />} />
                       <Route path="/home" element={<Home />} />
                       
                       <Route path='/product' element={<ProductPage />} />
