@@ -20,14 +20,12 @@ namespace back_end.Controllers
             _context = context;
         }
 
-        // GET: api/Customers/GetAll
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
             return await _context.Customers.ToListAsync();
         }
 
-        // GET: api/Customers/GetbyId/5
         [HttpGet("GetbyId/{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
@@ -39,7 +37,6 @@ namespace back_end.Controllers
             return customer;
         }
 
-        // POST: api/Customers/Create
         [HttpPost("Create")]
         public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
         {
@@ -48,17 +45,14 @@ namespace back_end.Controllers
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.CustomerID }, customer);
         }
 
-        // PUT: api/Customers/Update/5
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, Customer customer)
         {
             if (id != customer.CustomerID)
             {
-                return BadRequest("Customer ID mismatch.");
+                return BadRequest();
             }
-
             _context.Entry(customer).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -74,11 +68,9 @@ namespace back_end.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
-        // DELETE: api/Customers/Delete/5
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
@@ -87,17 +79,15 @@ namespace back_end.Controllers
             {
                 return NotFound();
             }
-
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        // Helper method to check if a Customer exists by ID
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.CustomerID == id);
         }
     }
+
 }
