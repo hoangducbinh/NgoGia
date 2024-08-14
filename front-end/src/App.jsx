@@ -13,6 +13,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {

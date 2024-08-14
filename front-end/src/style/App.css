@@ -4,7 +4,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #1d2634;
+  /* background-color: #5a6371; */
   color: #9e9ea4;
   font-family: 'Montserrat', sans-serif;
 
@@ -52,6 +52,7 @@ body {
   justify-content: space-between;
   padding: 0 30px 0 30px;
   box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
+  background-color:  #263043;
 }
 
 .menu-icon {
