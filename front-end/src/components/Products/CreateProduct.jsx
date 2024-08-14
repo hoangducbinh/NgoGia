@@ -74,14 +74,14 @@ function CreateProduct({ onClose, onSuccess }) {
   const selectedCategoryName = categories.find(category => category.categoryProductID === parseInt(selectedCategory))?.categoryProductName || 'Select a category';
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto">
+    <div className="p-6 bg-white rounded-lg  max-w-lg mx-auto">
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Create Product</h2>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label htmlFor="productName" className="block text-gray-700 text-sm font-medium mb-2">Name</label>
           <input
             id="productName"
-            type="text"
+            type="text" 
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             required

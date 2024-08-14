@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';  // Thêm SweetAlert2
 import apiClient from '../../services/api';
 import CreateProduct from './CreateProduct';
 import UpdateProduct from './UpdateProduct';
-
 import '../../style/globals.css';
 import Popup from '../Popup';
+import CategoryProductPage from '../CategoryProducts/CategoryProductPage';
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
   const [editingProductId, setEditingProductId] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [showCategoryPopup, setShowCategoryPopup] = useState(false);
 
   useEffect(() => {
     apiClient.get('api/Products/GetAll')
@@ -30,18 +32,45 @@ function ProductPage() {
   };
 
   const handleDeleteClick = (productId) => {
-    apiClient.delete(`api/Products/Delete/${productId}`)
-      .then(() => {
-        setProducts(products.filter(product => product.productID !== productId));
-        alert('Product deleted successfully!');
-      })
-      .catch(error => {
-        console.error("There was an error deleting the product!", error);
-      });
+    Swal.fire({
+      title: 'Bạn có chắc chắn không?',
+      text: "Hành động này sẽ xóa sản phẩm!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        apiClient.delete(`api/Products/Delete/${productId}`)
+          .then(() => {
+            setProducts(products.filter(product => product.productID !== productId));
+            Swal.fire(
+              'Đã xóa!',
+              'Sản phẩm đã được xóa.',
+              'success'
+            );
+          })
+          .catch(error => {
+            console.error("There was an error deleting the product!", error);
+            Swal.fire(
+              'Lỗi!',
+              'Có lỗi xảy ra khi xóa sản phẩm.',
+              'error'
+            );
+          });
+      }
+    });
   };
 
   const closeCreatePopup = () => setShowCreate(false);
   const closeUpdatePopup = () => setEditingProductId(null);
+  const closeCategoryPopup = () => setShowCategoryPopup(false);
+
+  const handleCategoryClick = () => {
+    navigate('/category-products');
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -52,12 +81,18 @@ function ProductPage() {
       >
         Add Product
       </button>
+      <button 
+        onClick={() => setShowCategoryPopup(true)}
+        className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600 ml-2"
+      >
+        Danh mục sản phẩm
+      </button>
       <Popup isOpen={showCreate} onClose={closeCreatePopup}>
         <CreateProduct 
           onClose={closeCreatePopup} 
           onSuccess={() => {
             closeCreatePopup();
-            apiClient.get('api/Products/GetAll') // Refresh product list after creation
+            apiClient.get('api/Products/GetAll')
               .then(response => setProducts(response.data))
               .catch(error => console.error("Error refreshing product list", error));
           }} 
@@ -73,6 +108,9 @@ function ProductPage() {
               .catch(error => console.error("Error refreshing product list", error));
           }}
         />
+      </Popup>
+      <Popup width="max-w-[1000px]" isOpen={showCategoryPopup} onClose={closeCategoryPopup}>
+        <CategoryProductPage onClose={closeCategoryPopup} />
       </Popup>
       <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
         <thead>

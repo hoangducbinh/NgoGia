@@ -96,6 +96,24 @@ namespace back_end.Controllers
             return NoContent();
         }
 
+        // GET: api/Products/GetByCategoryId/{categoryId}
+        [HttpGet("GetByCategory/{categoryId}")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategoryId(int categoryId)
+        {
+            var products = await _context.Products
+                .Include(p => p.CategoryProduct) // Include CategoryProduct details
+                .Where(p => p.CategoryProduct.CategoryProductID == categoryId)
+                .ToListAsync();
+
+            if (products == null || !products.Any())
+            {
+                return NotFound("No products found for the given category ID.");
+            }
+
+            return Ok(products);
+        }
+
+
         // DELETE: api/Products/Delete/5
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)

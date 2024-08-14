@@ -52,7 +52,7 @@ const CustomerForm = ({ customer, isAdding, onClose }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 max-w-md mx-auto">
+    <div className="bg-white  rounded-lg p-6 max-w-md mx-auto">
       <h2 className="text-xl font-semibold mb-4">{isAdding ? 'Add New Customer' : 'Edit Customer'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col">

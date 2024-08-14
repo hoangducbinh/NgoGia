@@ -7,6 +7,7 @@ import FormXuatKho from '../src/components/FormXuatKho';
 import Login from '../src/screens/Login';
 import ProductPage from './components/Products/ProductPage';
 import CustomerPage from './components/Customers/CustomerPage';
+import CategoryProductPage from './components/CategoryProducts/CategoryProductPage';
 
 function App() {
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
@@ -56,6 +57,7 @@ function App() {
                       
                       <Route path='/product' element={<ProductPage />} />
                       <Route path='/customer' element={<CustomerPage />} />
+                      <Route path="/category-products" element={<CategoryProductPage />} />
                       <Route path="*" element={<Navigate to="/product" replace />} />
                     </Routes>
                   </main>
