@@ -27,7 +27,7 @@ const Login = ({ setIsLoggedIn }) => {
         setIsLoggedIn(true);
         console.log('Đăng nhập thành công');
         alert('Đăng nhập thành công!');
-        navigate('/home'); // Chuyển hướng đến trang Home
+        navigate('/product'); // Chuyển hướng đến trang Home
       } else {
         // Xử lý khi đăng nhập thất bại
         setError('Tài khoản hoặc mật khẩu không đúng!');

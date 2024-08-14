@@ -7,10 +7,6 @@
   font-family: "Open Sans", sans-serif;
 }
 
-body {
-  background-color: #f0f2f5;
-}
-
 .wrapper {
   position: absolute;
   top: 50%;
@@ -102,21 +98,6 @@ form {
   text-decoration: underline;
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  padding: 16px 20px;
-  cursor: pointer;
-  border-radius: 10px;
-  font-size: 16px;
-  transition: 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
 
 .register {
   text-align: center;
@@ -136,5 +117,13 @@ button:hover {
 .btn-submit {
   font-size: 18px;
   font-weight: bold;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 16px 20px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: 0.3s ease;
 }
-
