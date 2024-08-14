@@ -4,54 +4,6 @@ import logo from '../assets/logo.png';
 
 function Sidebar({ openSidebarToggle, OpenSidebar }) {
   return (
-<<<<<<< HEAD
-    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive": ""}>
-        <div className='sidebar-title'>
-            <div className='sidebar-brand'>
-                {/* <BsCart3  className='icon_header'/> SHOP */}
-                <img src={logo} alt='' className='logo' width={150} />
-            </div>
-            <span className='icon close_icon' onClick={OpenSidebar}>x</span>
-        </div>
-
-        <ul className='sidebar-list'>
-            <li className='sidebar-list-item'>
-                <a href="/home">
-                    <BsGrid1X2Fill className='icon'/> Dashboard
-                </a>
-            </li>
-            <li className='sidebar-list-item'>
-                <a href="/formxuatkho">
-                    <BsCardText className='icon'/> Xuất phiếu bán hàng
-                </a>
-            </li>
-            <li className='sidebar-list-item'>
-                <a href="/login">
-                    <BsFillGrid3X3GapFill className='icon'/> Categories
-                </a>
-            </li>
-            <li className='sidebar-list-item'>
-                <a href="">
-                    <BsPeopleFill className='icon'/> Customers
-                </a>
-            </li>
-            <li className='sidebar-list-item'>
-                <a href="">
-                    <BsListCheck className='icon'/> Inventory
-                </a>
-            </li>
-            <li className='sidebar-list-item'>
-                <a href="">
-                    <BsMenuButtonWideFill className='icon'/> Reports
-                </a>
-            </li>
-            <li className='sidebar-list-item'>
-                <a href="">
-                    <BsFillGearFill className='icon'/> Setting
-                </a>
-            </li>
-        </ul>
-=======
     <aside
       id="sidebar"
       className={`fixed top-0 left-0 h-full bg-gray-900 text-gray-300 transition-transform duration-300 ease-in-out transform ${
@@ -101,7 +53,6 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
           </a>
         </li>
       </ul>
->>>>>>> 0a3c429b350d79b7f9c209272f368070c1df116e
     </aside>
   );
 }
