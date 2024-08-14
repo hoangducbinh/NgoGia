@@ -13,13 +13,15 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false); // Trạng thái khởi tạo
 
+
   useEffect(() => {
-    // Giả sử bạn có logic để kiểm tra trạng thái đăng nhập từ localStorage hoặc API
-    const loggedInStatus = localStorage.getItem('isLoggedIn');
-    if (loggedInStatus === 'true') {
+    const token = localStorage.getItem('token');
+    if (token) {
       setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
-    setIsInitialized(true); // Sau khi kiểm tra trạng thái đăng nhập
+    setIsInitialized(true);
   }, []);
 
   const OpenSidebar = () => {

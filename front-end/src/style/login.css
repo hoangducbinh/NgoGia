@@ -37,7 +37,8 @@ body::before {
   border-radius: 8px;
   padding: 30px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* border: 1px solid rgba(255, 255, 255, 0.5); */
+  border:2px solid black;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -126,15 +127,17 @@ button {
   cursor: pointer;
   border-radius: 10px;
   font-size: 16px;
-  border: 2px solid gray;
+  /* border: 2px solid gray; */
   transition: 0.3s ease;
   height:100px;
+  
 }
 
 button:hover {
-  color:black;
+  color:white;
   border-color: #fff;
-  background: rgba(255, 255, 255, 0.15);
+  /* background: rgba(255, 255, 255, 0.15); */
+  background-color: rgb(78, 25, 238);
 }
 
 .register {

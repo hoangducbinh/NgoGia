@@ -24,7 +24,7 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
             </li>
             <li className='sidebar-list-item'>
                 <a href="/formxuatkho">
-                    <BsCardText className='icon'/> Create Form
+                    <BsCardText className='icon'/> Xuất phiếu bán hàng
                 </a>
             </li>
             <li className='sidebar-list-item'>
