@@ -13,6 +13,7 @@ const CustomerForm = ({ customer, isAdding, onClose }) => {
   useEffect(() => {
     if (customer) {
       setFormData({
+        customerID: customer.customerID || '',
         customerName: customer.customerName || '',
         address: customer.address || '',
         receiver: customer.receiver || '',
