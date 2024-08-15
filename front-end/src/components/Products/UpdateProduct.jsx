@@ -17,7 +17,7 @@ function UpdateProduct({ productId, onUpdate }) {
         const response = await apiClient.get(`api/Products/GetbyId/${productId}`);
         setProduct(response.data);
         setName(response.data.productName);
-        setPrice(response.data.price);
+        setPrice(response.data.sellPrice);
         setUnit(response.data.unit);
         setCategoryProduct(response.data.categoryProduct);
       } catch (error) {

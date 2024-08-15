@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace back_end.Models
+namespace back_end.DTOs
 {
-    public class CategoryProduct
+    public class CategoryProductDetailDTO
     {
         public string CategoryProductID { get; set; }
         public string CategoryProductName { get; set; }
-        public ICollection<Product> Products { get; set; }
     }
 }

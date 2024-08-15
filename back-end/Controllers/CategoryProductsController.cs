@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Models;
 using back_end.Data;
+using back_end.DTOs;
 
 namespace back_end.Controllers
 {
@@ -22,16 +23,28 @@ namespace back_end.Controllers
 
         // GET: api/CategoryProducts/GetAll
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<CategoryProduct>>> GetCategoryProducts()
+        public async Task<ActionResult<IEnumerable<CategoryProductDetailDTO>>> GetCategoryProducts()
         {
-            return await _context.CategoryProducts.ToListAsync();
+            return await _context.CategoryProducts
+                .Select(cp => new CategoryProductDetailDTO
+                {
+                    CategoryProductID = cp.CategoryProductID,
+                    CategoryProductName = cp.CategoryProductName
+                })
+                .ToListAsync();
         }
 
         // GET: api/CategoryProducts/GetById/5
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<CategoryProduct>> GetCategoryProduct(int id)
+        public async Task<ActionResult<CategoryProductDetailDTO>> GetCategoryProduct(string id)
         {
-            var categoryProduct = await _context.CategoryProducts.FindAsync(id);
+            var categoryProduct = await _context.CategoryProducts
+                .Select(cp => new CategoryProductDetailDTO
+                {
+                    CategoryProductID = cp.CategoryProductID,
+                    CategoryProductName = cp.CategoryProductName
+                })
+                .FirstOrDefaultAsync(cp => cp.CategoryProductID == id);
 
             if (categoryProduct == null)
             {
@@ -43,22 +56,43 @@ namespace back_end.Controllers
 
         // POST: api/CategoryProducts/Create
         [HttpPost("Create")]
-        public async Task<ActionResult<CategoryProduct>> CreateCategoryProduct(CategoryProduct categoryProduct)
+        public async Task<ActionResult<CategoryProductDetailDTO>> CreateCategoryProduct(CategoryProductDTO categoryProductDTO)
         {
+            var categoryProduct = new CategoryProduct
+            {
+                CategoryProductID = categoryProductDTO.CategoryProductID,
+                CategoryProductName = categoryProductDTO.CategoryProductName
+            };
+
             _context.CategoryProducts.Add(categoryProduct);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCategoryProduct), new { id = categoryProduct.CategoryProductID }, categoryProduct);
+            var result = new CategoryProductDetailDTO
+            {
+                CategoryProductID = categoryProduct.CategoryProductID,
+                CategoryProductName = categoryProduct.CategoryProductName
+            };
+
+            return CreatedAtAction(nameof(GetCategoryProduct), new { id = result.CategoryProductID }, result);
         }
 
         // PUT: api/CategoryProducts/Update/5
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateCategoryProduct(int id, CategoryProduct categoryProduct)
+        public async Task<IActionResult> UpdateCategoryProduct(string id, CategoryProductDTO categoryProductDTO)
         {
-            if (id != categoryProduct.CategoryProductID)
+            if (id != categoryProductDTO.CategoryProductID)
             {
                 return BadRequest();
             }
+
+            var categoryProduct = await _context.CategoryProducts.FindAsync(id);
+            if (categoryProduct == null)
+            {
+                return NotFound();
+            }
+
+            // Update the categoryProduct entity
+            categoryProduct.CategoryProductName = categoryProductDTO.CategoryProductName;
 
             _context.Entry(categoryProduct).State = EntityState.Modified;
 
@@ -83,7 +117,7 @@ namespace back_end.Controllers
 
         // DELETE: api/CategoryProducts/Delete/5
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteCategoryProduct(int id)
+        public async Task<IActionResult> DeleteCategoryProduct(string id)
         {
             var categoryProduct = await _context.CategoryProducts.FindAsync(id);
             if (categoryProduct == null)
@@ -97,7 +131,8 @@ namespace back_end.Controllers
             return NoContent();
         }
 
-        private bool CategoryProductExists(int id)
+        // Helper method to check if a CategoryProduct exists by ID
+        private bool CategoryProductExists(string id)
         {
             return _context.CategoryProducts.Any(e => e.CategoryProductID == id);
         }

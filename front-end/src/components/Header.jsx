@@ -15,10 +15,10 @@ function Header({ OpenSidebar }) {
   };
 
   return (
-    <header className='flex items-center justify-between p-4 bg-blue-800 text-white shadow-lg'>
+    <header className='flex items-center justify-between p-4 bg-gradient-to-r from-white/50 to-blue-500/50 backdrop-blur-md text-white shadow-lg'>
       <div className='flex items-center'>
         <BsJustify 
-          className='text-2xl cursor-pointer hover:text-gray-200 transition-colors duration-300' 
+          className='text-2xl cursor-pointer hover:text-gray-200 bg-slate-300 duration-300' 
           onClick={OpenSidebar} 
         />
       </div>

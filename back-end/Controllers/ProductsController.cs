@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using back_end.Models;
 using back_end.Data;
+using back_end.DTOs;
 
 namespace back_end.Controllers
 {
@@ -22,19 +23,42 @@ namespace back_end.Controllers
 
         // GET: api/Products/GetAll
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDetailDTO>>> GetProducts()
         {
             return await _context.Products
-                .Include(p => p.CategoryProduct) // Include CategoryProduct details
+                .Include(p => p.CategoryProduct)
+                .Select(p => new ProductDetailDTO
+                {
+                    ProductID = p.ProductID,
+                    ProductName = p.ProductName,
+                    Unit = p.Unit,
+                    SellPrice = p.SellPrice,
+                    ImportPrice = p.ImportPrice,
+                    Description = p.Description,
+                    CategoryProductID = p.CategoryProductID,
+                    CategoryProductName = p.CategoryProduct.CategoryProductName
+                })
                 .ToListAsync();
         }
 
         // GET: api/Products/GetById/5
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDetailDTO>> GetProduct(string id)
         {
             var product = await _context.Products
-                .Include(p => p.CategoryProduct) // Include CategoryProduct details
+                .Include(p => p.CategoryProduct)
+                .Select(p => new ProductDetailDTO
+                {
+                    ProductID = p.ProductID,
+                    ProductName = p.ProductName,
+                    Unit = p.Unit,
+                    SellPrice = p.SellPrice,
+                    ImportPrice = p.ImportPrice,
+                    Description = p.Description,
+                    Quantity = p.Quantity,
+                    CategoryProductID = p.CategoryProductID,
+                    CategoryProductName = p.CategoryProduct.CategoryProductName
+                })
                 .FirstOrDefaultAsync(p => p.ProductID == id);
 
             if (product == null)
@@ -45,35 +69,79 @@ namespace back_end.Controllers
             return product;
         }
 
+        private string GenerateCustomID()
+        {
+            return "THN" + new Random().Next(1000, 9999).ToString(); // Ví dụ định dạng ID: THN1234
+        }
+
         // POST: api/Products/Create
         [HttpPost("Create")]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public async Task<ActionResult<ProductDetailDTO>> CreateProduct(ProductDTO productDTO)
         {
             // Validate if CategoryProduct exists
-            var category = await _context.CategoryProducts.FindAsync(product.CategoryProduct.CategoryProductID);
+            var category = await _context.CategoryProducts.FindAsync(productDTO.CategoryProductID);
             if (category == null)
             {
                 return BadRequest("Invalid CategoryProductID");
             }
 
-            // Set the CategoryProduct reference to the found category
-            product.CategoryProduct = category;
+            var newProductID = GenerateCustomID(); // Tạo ID mới
+
+            // Map ProductDTO to Product entity
+            var product = new Product
+            {
+                ProductID = newProductID,
+                ProductName = productDTO.ProductName,
+                Unit = productDTO.Unit,
+                SellPrice = productDTO.SellPrice,
+                ImportPrice = productDTO.ImportPrice,
+                Description = productDTO.Description,
+                Quantity = productDTO.Quantity,
+                CategoryProductID = productDTO.CategoryProductID
+            };
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProduct), new { id = product.ProductID }, product);
-        }
+            var result = new ProductDetailDTO
+            {
+                ProductID = product.ProductID,
+                ProductName = product.ProductName,
+                Unit = product.Unit,
+                SellPrice = product.SellPrice,
+                ImportPrice = product.ImportPrice,
+                Description = product.Description,
+                Quantity = product.Quantity,
+                CategoryProductID = product.CategoryProductID,
+                CategoryProductName = category.CategoryProductName
+            };
 
+            return CreatedAtAction(nameof(GetProduct), new { id = result.ProductID }, result);
+        }
 
         // PUT: api/Products/Update/5
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, Product product)
+        public async Task<IActionResult> UpdateProduct(string id, ProductDTO productDTO)
         {
-            if (id != product.ProductID)
+            if (id != productDTO.ProductID)
             {
-                return BadRequest();
+                return BadRequest("ID mismatch");
             }
+
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // Map ProductDTO to existing Product entity
+            product.ProductName = productDTO.ProductName;
+            product.Unit = productDTO.Unit;
+            product.SellPrice = productDTO.SellPrice;
+            product.ImportPrice = productDTO.ImportPrice;
+            product.Description = productDTO.Description;
+            product.Quantity = productDTO.Quantity;
+            product.CategoryProductID = productDTO.CategoryProductID;
 
             _context.Entry(product).State = EntityState.Modified;
 
@@ -96,30 +164,11 @@ namespace back_end.Controllers
             return NoContent();
         }
 
-        // GET: api/Products/GetByCategoryId/{categoryId}
-        [HttpGet("GetByCategory/{categoryId}")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategoryId(int categoryId)
-        {
-            var products = await _context.Products
-                .Include(p => p.CategoryProduct) // Include CategoryProduct details
-                .Where(p => p.CategoryProduct.CategoryProductID == categoryId)
-                .ToListAsync();
-
-            if (products == null || !products.Any())
-            {
-                return NotFound("No products found for the given category ID.");
-            }
-
-            return Ok(products);
-        }
-
-
         // DELETE: api/Products/Delete/5
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(string id)
         {
             var product = await _context.Products.FindAsync(id);
-
             if (product == null)
             {
                 return NotFound();
@@ -132,7 +181,7 @@ namespace back_end.Controllers
         }
 
         // Helper method to check if a Product exists by ID
-        private bool ProductExists(int id)
+        private bool ProductExists(string id)
         {
             return _context.Products.Any(e => e.ProductID == id);
         }

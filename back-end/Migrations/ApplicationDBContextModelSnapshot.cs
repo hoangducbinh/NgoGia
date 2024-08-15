@@ -157,11 +157,8 @@ namespace back_end.Migrations
 
             modelBuilder.Entity("back_end.Models.CategoryProduct", b =>
                 {
-                    b.Property<int>("CategoryProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryProductID"));
+                    b.Property<string>("CategoryProductID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CategoryProductName")
                         .IsRequired()
@@ -288,6 +285,9 @@ namespace back_end.Migrations
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProductID1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
@@ -296,7 +296,7 @@ namespace back_end.Migrations
 
                     b.HasKey("InventoryID");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductID1");
 
                     b.HasIndex("WarehouseID");
 
@@ -365,6 +365,9 @@ namespace back_end.Migrations
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProductID1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -378,28 +381,36 @@ namespace back_end.Migrations
 
                     b.HasIndex("OrderID");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductID1");
 
                     b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("back_end.Models.Product", b =>
                 {
-                    b.Property<int>("ProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("ProductID")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductID"));
+                    b.Property<string>("CategoryProductID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CategoryProductID")
-                        .HasColumnType("int");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("ImportPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SellPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Unit")
                         .IsRequired()
@@ -537,9 +548,7 @@ namespace back_end.Migrations
                 {
                     b.HasOne("back_end.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductID1");
 
                     b.HasOne("back_end.Models.Warehouse", "Warehouse")
                         .WithMany()
@@ -584,9 +593,7 @@ namespace back_end.Migrations
 
                     b.HasOne("back_end.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductID1");
 
                     b.Navigation("Order");
 
@@ -596,7 +603,7 @@ namespace back_end.Migrations
             modelBuilder.Entity("back_end.Models.Product", b =>
                 {
                     b.HasOne("back_end.Models.CategoryProduct", "CategoryProduct")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("CategoryProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -624,6 +631,11 @@ namespace back_end.Migrations
                         .IsRequired();
 
                     b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("back_end.Models.CategoryProduct", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("back_end.Models.Order", b =>

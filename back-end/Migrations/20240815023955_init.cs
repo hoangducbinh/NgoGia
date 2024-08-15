@@ -57,8 +57,7 @@ namespace back_end.Migrations
                 name: "CategoryProducts",
                 columns: table => new
                 {
-                    CategoryProductID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryProductID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CategoryProductName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -206,12 +205,13 @@ namespace back_end.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    ProductID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CategoryProductID = table.Column<int>(type: "int", nullable: false)
+                    SellPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ImportPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryProductID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,17 +253,17 @@ namespace back_end.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductID = table.Column<int>(type: "int", nullable: false),
                     WarehouseID = table.Column<int>(type: "int", nullable: false),
-                    StockQuantity = table.Column<int>(type: "int", nullable: false)
+                    StockQuantity = table.Column<int>(type: "int", nullable: false),
+                    ProductID1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Inventories", x => x.InventoryID);
                     table.ForeignKey(
-                        name: "FK_Inventories_Products_ProductID",
-                        column: x => x.ProductID,
+                        name: "FK_Inventories_Products_ProductID1",
+                        column: x => x.ProductID1,
                         principalTable: "Products",
-                        principalColumn: "ProductID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ProductID");
                     table.ForeignKey(
                         name: "FK_Inventories_Warehouses_WarehouseID",
                         column: x => x.WarehouseID,
@@ -303,7 +303,8 @@ namespace back_end.Migrations
                     ProductID = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ProductID1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -315,11 +316,10 @@ namespace back_end.Migrations
                         principalColumn: "OrderID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderDetails_Products_ProductID",
-                        column: x => x.ProductID,
+                        name: "FK_OrderDetails_Products_ProductID1",
+                        column: x => x.ProductID1,
                         principalTable: "Products",
-                        principalColumn: "ProductID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ProductID");
                 });
 
             migrationBuilder.CreateTable(
@@ -404,9 +404,9 @@ namespace back_end.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Inventories_ProductID",
+                name: "IX_Inventories_ProductID1",
                 table: "Inventories",
-                column: "ProductID");
+                column: "ProductID1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inventories_WarehouseID",
@@ -424,9 +424,9 @@ namespace back_end.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_ProductID",
+                name: "IX_OrderDetails_ProductID1",
                 table: "OrderDetails",
-                column: "ProductID");
+                column: "ProductID1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerID",
