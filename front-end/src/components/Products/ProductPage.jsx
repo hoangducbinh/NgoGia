@@ -105,13 +105,13 @@ function ProductPage() {
   return (
     <div className="mx-auto p-6 bg-gray-50 rounded-lg shadow-lg bg-gradient-to-r from-white/50 to-blue-500/50">
       <div className="flex justify-between mb-6">
-        <button 
-          onClick={handleAddClick} 
+        <button
+          onClick={handleAddClick}
           className="bg-indigo-500 text-white px-5 py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
         >
           Nhập hàng
         </button>
-        <button 
+        <button
           onClick={() => setShowCategoryPopup(true)}
           className="bg-teal-500 text-white px-5 py-2 rounded-lg hover:bg-teal-600 transition duration-300"
         >
@@ -119,14 +119,14 @@ function ProductPage() {
         </button>
       </div>
       <Popup width="max-w-[850px]" isOpen={showCreate} onClose={closeCreatePopup}>
-        <CreateProduct 
-          onClose={closeCreatePopup} 
+        <CreateProduct
+          onClose={closeCreatePopup}
           onSuccess={() => {
             closeCreatePopup();
             apiClient.get('api/Products/GetAll')
               .then(response => setProducts(response.data))
               .catch(error => console.error("Error refreshing product list", error));
-          }} 
+          }}
         />
       </Popup>
       <Popup width="max-w-[1000px]" isOpen={!!editingProductId} onClose={closeUpdatePopup}>
@@ -147,10 +147,10 @@ function ProductPage() {
         <div>
           <h2 className="text-2xl font-bold mb-4 text-gray-700">Mô tả sản phẩm</h2>
           <textarea
-           className="border border-gray-300 p-3 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border border-gray-300 p-3 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="4"
-           value={description}
-           />
+            value={description}
+          />
           <div className="flex justify-end mt-6">
             <button
               onClick={() => setShowDescriptionPopup(false)}
@@ -180,13 +180,27 @@ function ProductPage() {
             <tr key={product.productID} className="border-t hover:bg-blue-100 transition duration-200">
               <td className="p-4 text-center">{product.categoryProductID}</td>
               <td className="p-4 text-center">{product.categoryProductName}</td>
-              <td className="p-4 text-center">{product.productName}</td>
+              <td className="p-4 text-center">
+                <span
+                  className="relative group" // Sử dụng group để điều chỉnh tooltip khi hover
+                >
+                  {product.productName.length > 25
+                    ? `${product.productName.substring(0, 25)}...`
+                    : product.productName}
+
+                  {/* Tooltip */}
+                  <span className="absolute z-10 hidden w-[300px] group-hover:block bg-black text-white text-sm font-semibold p-2 rounded-lg max-w-xs transform -translate-x-1/2 translate-y-1 top-8">
+                    {product.productName}
+                  </span>
+                </span>
+              </td>
+
               <td className="p-4 text-center">{formatter.format(product.importPrice)}</td>
               <td className="p-4 text-center">{formatter.format(product.sellPrice)}</td>
               <td className="p-4 text-center">{product.quantity}</td>
               <td className="p-4 text-center">{product.unit}</td>
               <td className="p-4 text-center">
-                <button 
+                <button
                   onClick={() => handleDescriptionView(product.productID)}
                   className="text-blue-500 px-3 py-1 rounded hover:text-yellow-600 transition duration-300"
                 >
@@ -194,13 +208,13 @@ function ProductPage() {
                 </button>
               </td>
               <td className="p-4 text-center">
-                <button 
+                <button
                   onClick={() => handleEditClick(product.productID)}
                   className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition duration-300 mr-2"
                 >
                   Sửa
                 </button>
-                <button 
+                <button
                   onClick={() => handleDeleteClick(product.productID)}
                   className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-300"
                 >

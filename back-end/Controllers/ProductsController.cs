@@ -72,7 +72,7 @@ namespace back_end.Controllers
 
         private string GenerateCustomID()
         {
-            return "THN" + new Random().Next(1000, 9999).ToString(); // Ví dụ định dạng ID: THN1234
+            return "DM" + new Random().Next(1000, 9999).ToString(); // Ví dụ định dạng ID: THN1234
         }
 
         // POST: api/Products/Create

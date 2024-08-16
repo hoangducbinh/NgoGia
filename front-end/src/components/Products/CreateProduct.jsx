@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
 import apiClient from '../../services/api';
 
@@ -13,6 +13,9 @@ function CreateProduct({ onClose, onSuccess }) {
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+
+  const importPriceRef = useRef(null);
+  const sellPriceRef = useRef(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -30,6 +33,27 @@ function CreateProduct({ onClose, onSuccess }) {
   const handleCategoryChange = (e) => {
     setCategoryInput(e.target.value);
   };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('vi-VN').format(value);
+  };
+
+  const handlePriceChange = (setter, ref) => (e) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, '');
+    setter(rawValue);
+
+    // Maintain cursor position
+    const formattedValue = formatCurrency(rawValue);
+    const cursorPosition = e.target.selectionStart + (formattedValue.length - e.target.value.length);
+    
+    setter(formattedValue);
+    setTimeout(() => {
+      if (ref.current) {
+        ref.current.setSelectionRange(cursorPosition, cursorPosition);
+      }
+    }, 0);
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,8 +84,8 @@ function CreateProduct({ onClose, onSuccess }) {
         productID, // Based on your ID generation logic
         productName,
         unit,
-        sellPrice,
-        importPrice,
+        sellPrice: parseInt(sellPrice.replace(/\D/g, ''), 10),
+        importPrice: parseInt(importPrice.replace(/\D/g, ''), 10),
         description,
         quantity,
         categoryProductID: categoryID
@@ -145,9 +169,10 @@ function CreateProduct({ onClose, onSuccess }) {
             <input
               placeholder='Nhập giá nhập'
               id="importPrice"
-              type="number"
+              type="text"
               value={importPrice}
-              onChange={(e) => setImportPrice(e.target.value)}
+              onChange={handlePriceChange(setImportPrice, importPriceRef)}
+              ref={importPriceRef}
               required
               className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -157,9 +182,10 @@ function CreateProduct({ onClose, onSuccess }) {
             <input
               placeholder='Nhập giá bán'
               id="sellPrice"
-              type="number"
+              type="text"
               value={sellPrice}
-              onChange={(e) => setSellPrice(e.target.value)}
+              onChange={handlePriceChange(setSellPrice, sellPriceRef)}
+              ref={sellPriceRef}
               required
               className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -218,5 +244,8 @@ function CreateProduct({ onClose, onSuccess }) {
     </div>
   );
 }
+
+
+
 
 export default CreateProduct;

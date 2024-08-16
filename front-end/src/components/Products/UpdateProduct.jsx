@@ -1,6 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef  } from 'react';
 import Swal from 'sweetalert2';
 import apiClient from '../../services/api';
+
+
+// Hàm định dạng giá
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('vi-VN').format(value);
+};
+
+// Hàm để loại bỏ định dạng và lấy giá nguyên gốc
+const parseCurrency = (value) => {
+  return parseInt(value.replace(/\D/g, ''), 10);
+};
+
 
 function UpdateProduct({ productId, onClose, onUpdate }) {
   const [productName, setProductName] = useState('');
@@ -11,6 +23,8 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
   const [quantity, setQuantity] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const sellPriceRef = useRef(null);
+  const importPriceRef = useRef(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,8 +42,8 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
         const product = response.data;
         setProductName(product.productName);
         setUnit(product.unit);
-        setSellPrice(product.sellPrice);
-        setImportPrice(product.importPrice);
+        setSellPrice(formatCurrency(product.sellPrice));
+        setImportPrice(formatCurrency(product.importPrice));
         setDescription(product.description);
         setQuantity(product.quantity);
         setSelectedCategory(product.categoryProductID);
@@ -50,8 +64,8 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
         productId,
         productName,
         unit,
-        sellPrice,
-        importPrice,
+        sellPrice: parseCurrency(sellPrice),
+        importPrice: parseCurrency(importPrice),
         description,
         quantity,
         categoryProductID: selectedCategory
@@ -59,7 +73,6 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
 
       if (onUpdate) onUpdate(); // Call onUpdate after success
       resetForm();
-
       Swal.fire({
         icon: 'success',
         title: 'Product Updated',
@@ -88,6 +101,21 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
     }
   };
 
+  const handlePriceChange = (setter, ref) => (e) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, '');
+    const formattedValue = formatCurrency(rawValue);
+    
+    setter(formattedValue);
+    
+    const cursorPosition = e.target.selectionStart + (formattedValue.length - e.target.value.length);
+    
+    setTimeout(() => {
+      if (ref.current) {
+        ref.current.setSelectionRange(cursorPosition, cursorPosition);
+      }
+    }, 0);
+  };
+
   const resetForm = () => {
     setProductName('');
     setUnit('');
@@ -114,9 +142,10 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
               id="productName"
               type="text"
               value={productName}
+              readOnly
               onChange={(e) => setProductName(e.target.value)}
               required
-              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 p-3 bg-slate-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="flex flex-col">
@@ -136,9 +165,10 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
             <label htmlFor="importPrice" className="block text-gray-700 text-sm font-medium mb-2">Giá nhập</label>
             <input
               id="importPrice"
-              type="number"
+              type="text"
               value={importPrice}
-              onChange={(e) => setImportPrice(e.target.value)}
+              onChange={handlePriceChange(setImportPrice, importPriceRef)}
+              ref={importPriceRef}
               required
               className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -147,9 +177,10 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
             <label htmlFor="sellPrice" className="block text-gray-700 text-sm font-medium mb-2">Giá bán</label>
             <input
               id="sellPrice"
-              type="number"
+              type="text"
               value={sellPrice}
-              onChange={(e) => setSellPrice(e.target.value)}
+              onChange={handlePriceChange(setSellPrice, sellPriceRef)}
+              ref={sellPriceRef}
               required
               className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -166,31 +197,24 @@ function UpdateProduct({ productId, onClose, onUpdate }) {
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="category" className="block text-gray-700 text-sm font-medium mb-2">Thuộc danh mục</label>
-            <select
+            <label htmlFor="category" className="block text-gray-700 text-sm font-medium mb-2">Mã sản phẩm</label>
+            <input
               id="category"
+              type="text"
               value={selectedCategory}
               onChange={handleCategoryChange}
+              placeholder='Mã sản phẩm'
+              readOnly
               required
-              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="" disabled>Nhấn chọn danh mục</option>
-              {categories.length > 0 ? (
-                categories.map(category => (
-                  <option key={category.categoryProductID} value={category.categoryProductID}>
-                    {category.categoryProductName}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>Chưa có danh mục, hãy tạo danh mục trước khi cập nhật sản phẩm</option>
-              )}
-            </select>
+              className="border border-gray-300 bg-slate-100 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
         </div>
         <div className="mb-6">
           <label htmlFor="description" className="block text-gray-700 text-sm font-medium mb-2">Mô tả sản phẩm</label>
           <textarea
             id="description"
+            placeholder='Nhập mô tả sản phẩm (nếu có), ví dụ: Thành phần, cách sử dụng, ...'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="border border-gray-300 p-3 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

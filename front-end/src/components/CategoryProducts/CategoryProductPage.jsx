@@ -5,6 +5,8 @@ import apiClient from '../../services/api';
 const CategoryProductsPage = () => {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; // Số danh mục hiển thị trên mỗi trang
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
@@ -61,14 +63,6 @@ const CategoryProductsPage = () => {
       title: `<h2 style="color:#4A90E2;">${id ? 'Chỉnh sửa danh mục' : 'Thêm mới danh mục'}</h2>`,
       html: `
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          ${id ? '' : `
-            <input 
-              id="categoryProductID" 
-              class="swal2-input" 
-              placeholder="Mã danh mục" 
-              value="${categoryProduct?.categoryProductID || ''}" 
-              style="border: 1px solid #4A90E2; border-radius: 4px; padding: 10px;">
-          `}
           <input 
             id="categoryProductName" 
             class="swal2-input" 
@@ -83,15 +77,10 @@ const CategoryProductsPage = () => {
       confirmButtonText: id ? 'Cập nhật' : 'Thêm mới',
       cancelButtonText: 'Huỷ',
       preConfirm: () => {
-        return id 
-          ? { 
-              categoryProductID: id,
-              categoryProductName: document.getElementById('categoryProductName').value 
-            }
-          : {
-              categoryProductID: document.getElementById('categoryProductID').value,
-              categoryProductName: document.getElementById('categoryProductName').value
-            };
+        return {
+          categoryProductID: id,
+          categoryProductName: document.getElementById('categoryProductName').value
+        };
       }
     });
   
@@ -126,7 +115,14 @@ const CategoryProductsPage = () => {
       }
     }
   };
-  
+
+  // Tính toán danh mục sản phẩm sẽ hiển thị trên trang hiện tại
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = categoryProducts.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Tính tổng số trang
+  const totalPages = Math.ceil(categoryProducts.length / itemsPerPage);
 
   return (
     <div className="p-4">
@@ -140,37 +136,56 @@ const CategoryProductsPage = () => {
       {loading ? (
         <p>Đang tải...</p>
       ) : (
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {categoryProducts.map((categoryProduct) => (
-              <tr key={categoryProduct.categoryProductID}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{categoryProduct.categoryProductID}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{categoryProduct.categoryProductName}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <button 
-                    onClick={() => handleEditOrAdd(categoryProduct.categoryProductID)}
-                    className="text-blue-500 hover:text-blue-700 mr-4"
-                  >
-                    Chỉnh sửa
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(categoryProduct.categoryProductID)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Xoá
-                  </button>
-                </td>
+        <>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentItems.map((categoryProduct) => (
+                <tr key={categoryProduct.categoryProductID}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{categoryProduct.categoryProductID}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{categoryProduct.categoryProductName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <button 
+                      onClick={() => handleEditOrAdd(categoryProduct.categoryProductID)}
+                      className="text-blue-500 hover:text-blue-700 mr-4"
+                    >
+                      Chỉnh sửa
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(categoryProduct.categoryProductID)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Xoá
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))}
+              className={`px-3 py-1 rounded-md ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
+              disabled={currentPage === 1}
+            >
+              Trước
+            </button>
+            <span className="px-3 py-1">{`Trang ${currentPage} / ${totalPages}`}</span>
+            <button
+              onClick={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))}
+              className={`px-3 py-1 rounded-md ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
+              disabled={currentPage === totalPages}
+            >
+              Sau
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
