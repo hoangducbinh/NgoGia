@@ -54,16 +54,20 @@ namespace back_end.Controllers
             return categoryProduct;
         }
 
+        private string GenerateCustomID()
+        {
+            return "DMTHN" + new Random().Next(1000, 9999).ToString(); // Ví dụ định dạng ID: THN1234
+        }
         // POST: api/CategoryProducts/Create
         [HttpPost("Create")]
         public async Task<ActionResult<CategoryProductDetailDTO>> CreateCategoryProduct(CategoryProductDTO categoryProductDTO)
         {
+            var newProductID = GenerateCustomID(); // Tạo ID mới
             var categoryProduct = new CategoryProduct
             {
-                CategoryProductID = categoryProductDTO.CategoryProductID,
+                CategoryProductID = newProductID,
                 CategoryProductName = categoryProductDTO.CategoryProductName
             };
-
             _context.CategoryProducts.Add(categoryProduct);
             await _context.SaveChangesAsync();
 
@@ -78,7 +82,7 @@ namespace back_end.Controllers
 
         // PUT: api/CategoryProducts/Update/5
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateCategoryProduct(string id, CategoryProductDTO categoryProductDTO)
+        public async Task<IActionResult> UpdateCategoryProduct(string id, CategoryProductDetailDTO categoryProductDTO)
         {
             if (id != categoryProductDTO.CategoryProductID)
             {

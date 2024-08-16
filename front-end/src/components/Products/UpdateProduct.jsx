@@ -1,139 +1,219 @@
 import React, { useState, useEffect } from 'react';
-import apiClient from '../../services/api';
 import Swal from 'sweetalert2';
+import apiClient from '../../services/api';
 
-function UpdateProduct({ productId, onUpdate }) {
-  const [product, setProduct] = useState(null);
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
+function UpdateProduct({ productId, onClose, onUpdate }) {
+  const [productName, setProductName] = useState('');
   const [unit, setUnit] = useState('');
-  const [categoryProduct, setCategoryProduct] = useState(null);
+  const [sellPrice, setSellPrice] = useState('');
+  const [importPrice, setImportPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [quantity, setQuantity] = useState('');
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   useEffect(() => {
-    // Fetch the product details and categories when productId changes
-    const fetchProductDetails = async () => {
-      try {
-        const response = await apiClient.get(`api/Products/GetbyId/${productId}`);
-        setProduct(response.data);
-        setName(response.data.productName);
-        setPrice(response.data.sellPrice);
-        setUnit(response.data.unit);
-        setCategoryProduct(response.data.categoryProduct);
-      } catch (error) {
-        console.error("There was an error fetching the product!", error);
-      }
-    };
-
     const fetchCategories = async () => {
       try {
         const response = await apiClient.get('api/CategoryProducts/GetAll');
         setCategories(response.data);
       } catch (error) {
-        console.error("There was an error fetching categories!", error);
+        console.error("There was an error fetching the categories!", error);
       }
     };
 
-    fetchProductDetails();
+    const fetchProduct = async () => {
+      try {
+        const response = await apiClient.get(`api/Products/GetById/${productId}`);
+        const product = response.data;
+        setProductName(product.productName);
+        setUnit(product.unit);
+        setSellPrice(product.sellPrice);
+        setImportPrice(product.importPrice);
+        setDescription(product.description);
+        setQuantity(product.quantity);
+        setSelectedCategory(product.categoryProductID);
+      } catch (error) {
+        console.error("There was an error fetching the product details!", error);
+      }
+    };
+
     fetchCategories();
+    fetchProduct();
   }, [productId]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    // Create the updated product object
-    const updatedProduct = {
-      productID: productId,
-      productName: name,
-      unit,
-      price,
-      categoryProduct: {
-        categoryProductID: categoryProduct.categoryProductID,
-        categoryProductName: categoryProduct.categoryProductName
-      }
-    };
-    console.log("Sending the following data to update the product:", updatedProduct);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
-      await apiClient.put(`api/Products/Update/${productId}`, updatedProduct);
+      await apiClient.put(`api/Products/Update/${productId}`, {
+        productId,
+        productName,
+        unit,
+        sellPrice,
+        importPrice,
+        description,
+        quantity,
+        categoryProductID: selectedCategory
+      });
+
+      if (onUpdate) onUpdate(); // Call onUpdate after success
+      resetForm();
+
       Swal.fire({
         icon: 'success',
-        title: 'Update Successful',
-        text: `Product "${name}" updated successfully with price $${price}!`,
-        confirmButtonText: 'OK'
+        title: 'Product Updated',
+        text: 'The product has been updated successfully!',
+        confirmButtonColor: '#3085d6',
       });
-      onUpdate(); // Notify parent component to refresh
+
     } catch (error) {
       console.error("There was an error updating the product!", error);
+
+      let errorMessage = 'There was an error updating the product!';
+      if (error.response && error.response.data) {
+        if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (typeof error.response.data === 'object') {
+          errorMessage = JSON.stringify(error.response.data, null, 2);
+        }
+      }
+
       Swal.fire({
         icon: 'error',
-        title: 'Update Failed',
-        text: 'There was an error updating the product. Please try again later.',
-        confirmButtonText: 'OK'
+        title: 'Error',
+        text: errorMessage,
+        confirmButtonColor: '#d33',
       });
     }
   };
 
-  if (!product) return null;
+  const resetForm = () => {
+    setProductName('');
+    setUnit('');
+    setSellPrice('');
+    setImportPrice('');
+    setDescription('');
+    setQuantity('');
+    setSelectedCategory('');
+  };
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 max-w-lg mx-auto bg-white rounded-lg">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-800">Update Product</h1>
-      <div className="mb-4">
-        <label className="block text-gray-700">Name:</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Price:</label>
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          required
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Unit:</label>
-        <input
-          type="text"
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
-          required
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Category:</label>
-        <select
-          value={categoryProduct ? categoryProduct.categoryProductID : ''}
-          onChange={(e) => {
-            const selectedCategory = categories.find(cat => cat.categoryProductID === parseInt(e.target.value));
-            setCategoryProduct(selectedCategory);
-          }}
-          required
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Select a category</option>
-          {categories.map((category) => (
-            <option key={category.categoryProductID} value={category.categoryProductID}>
-              {category.categoryProductName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        type="submit"
-        className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
-      >
-        Update
-      </button>
-    </form>
+    <div className="p-8 bg-white rounded-lg max-w-3xl mx-auto">
+      <h2 className="text-3xl font-bold mb-8 text-gray-900">Cập nhật sản phẩm</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="flex flex-col">
+            <label htmlFor="productName" className="block text-gray-700 text-sm font-medium mb-2">Tên sản phẩm</label>
+            <input
+              placeholder='Ví dụ: Tủ lạnh, Máy in, ...'
+              id="productName"
+              type="text"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="unit" className="block text-gray-700 text-sm font-medium mb-2">Đơn vị tính</label>
+            <input
+              placeholder='Ví dụ: hộp, chai, gói, ...'
+              id="unit"
+              type="text"
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          <div className="flex flex-col">
+            <label htmlFor="importPrice" className="block text-gray-700 text-sm font-medium mb-2">Giá nhập</label>
+            <input
+              id="importPrice"
+              type="number"
+              value={importPrice}
+              onChange={(e) => setImportPrice(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="sellPrice" className="block text-gray-700 text-sm font-medium mb-2">Giá bán</label>
+            <input
+              id="sellPrice"
+              type="number"
+              value={sellPrice}
+              onChange={(e) => setSellPrice(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="quantity" className="block text-gray-700 text-sm font-medium mb-2">Số lượng nhập</label>
+            <input
+              id="quantity"
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              required
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="category" className="block text-gray-700 text-sm font-medium mb-2">Thuộc danh mục</label>
+            <select
+              id="category"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              required
+              className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="" disabled>Nhấn chọn danh mục</option>
+              {categories.length > 0 ? (
+                categories.map(category => (
+                  <option key={category.categoryProductID} value={category.categoryProductID}>
+                    {category.categoryProductName}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>Chưa có danh mục, hãy tạo danh mục trước khi cập nhật sản phẩm</option>
+              )}
+            </select>
+          </div>
+        </div>
+        <div className="mb-6">
+          <label htmlFor="description" className="block text-gray-700 text-sm font-medium mb-2">Mô tả sản phẩm</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="border border-gray-300 p-3 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="4"
+          />
+        </div>
+        <div className="flex justify-end gap-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition duration-200"
+          >
+            Hủy cập nhật
+          </button>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-200"
+          >
+            Cập nhật
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 

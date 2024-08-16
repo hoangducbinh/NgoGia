@@ -35,6 +35,7 @@ namespace back_end.Controllers
                     SellPrice = p.SellPrice,
                     ImportPrice = p.ImportPrice,
                     Description = p.Description,
+                    Quantity = p.Quantity,
                     CategoryProductID = p.CategoryProductID,
                     CategoryProductName = p.CategoryProduct.CategoryProductName
                 })
@@ -162,6 +163,15 @@ namespace back_end.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("CheckProductNameExists")]
+        public async Task<IActionResult> CheckProductNameExists([FromQuery] string productName)
+        {
+            var normalizedProductName = productName.ToLower().Trim();
+            var productExists = await _context.Products
+                .AnyAsync(p => p.ProductName.ToLower().Trim() == normalizedProductName);
+            return Ok(productExists);
         }
 
         // DELETE: api/Products/Delete/5

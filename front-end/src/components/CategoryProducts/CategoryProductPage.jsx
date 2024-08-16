@@ -1,154 +1,179 @@
 import React, { useEffect, useState } from 'react';
-import apiClient from '../../services/api';
-import { FaTags } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import apiClient from '../../services/api';
 
-const CategoryProductPage = () => {
+const CategoryProductsPage = () => {
   const [categoryProducts, setCategoryProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [categoryProductName, setCategoryProductName] = useState('');
-  const [productDetails, setProductDetails] = useState([]);
-  const [noProductsMessage, setNoProductsMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchCategoryProducts = async () => {
+      try {
+        const response = await apiClient.get('/api/CategoryProducts/GetAll');
+        setCategoryProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching category products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchCategoryProducts();
   }, []);
 
-  const fetchCategoryProducts = async () => {
-    try {
-      const response = await apiClient.get('/api/CategoryProducts/GetAll');
-      setCategoryProducts(response.data);
-    } catch (error) {
-      console.error('Failed to fetch category products', error);
-    }
-  };
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Bạn có chắc chắn?',
+      text: 'Bạn sẽ không thể hoàn tác điều này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Vâng, xoá nó đi!'
+    });
 
-  const fetchProductsByCategory = async (categoryId) => {
-    try {
-      const response = await apiClient.get(`/api/Products/GetByCategory/${categoryId}`);
-      if (response.data.length === 0) {
-        setNoProductsMessage('No products found in this category.');
-      } else {
-        setNoProductsMessage('');
+    if (result.isConfirmed) {
+      try {
+        await apiClient.delete(`/api/CategoryProducts/Delete/${id}`);
+        setCategoryProducts(categoryProducts.filter(cp => cp.categoryProductID !== id));
+        Swal.fire(
+          'Đã xoá!',
+          'Danh mục đã được xoá.',
+          'success'
+        );
+      } catch (error) {
+        console.error('Lỗi khi xoá danh mục:', error);
+        Swal.fire(
+          'Lỗi!',
+          'Đã có lỗi xảy ra khi xoá danh mục.',
+          'error'
+        );
       }
-      setProductDetails(response.data);
-    } catch (error) {
-      console.error('Failed to fetch products by category', error);
     }
   };
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-    fetchProductsByCategory(category.categoryProductID);
-  };
-
-  const handleBackClick = () => {
-    setSelectedCategory(null);
-    setProductDetails([]);
-    setNoProductsMessage('');
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Chuẩn hóa tên danh mục
-    const normalize = (str) => str.trim().toLowerCase();
-
-    // Chuẩn hóa tên danh mục nhập vào
-    const normalizedNewCategoryName = normalize(categoryProductName);
-
-    // Kiểm tra trùng tên trong danh sách danh mục hiện tại
-    const isDuplicate = categoryProducts.some(
-      (category) => normalize(category.categoryProductName) === normalizedNewCategoryName
-    );
-
-    if (isDuplicate) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Duplicate Category',
-        text: 'This category name already exists.',
-        confirmButtonText: 'OK'
-      });
-      return;
+  const handleEditOrAdd = async (id = null) => {
+    const categoryProduct = id 
+      ? categoryProducts.find(cp => cp.categoryProductID === id)
+      : { categoryProductName: '', categoryProductID: '' };
+  
+    const { value: formValues } = await Swal.fire({
+      title: `<h2 style="color:#4A90E2;">${id ? 'Chỉnh sửa danh mục' : 'Thêm mới danh mục'}</h2>`,
+      html: `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          ${id ? '' : `
+            <input 
+              id="categoryProductID" 
+              class="swal2-input" 
+              placeholder="Mã danh mục" 
+              value="${categoryProduct?.categoryProductID || ''}" 
+              style="border: 1px solid #4A90E2; border-radius: 4px; padding: 10px;">
+          `}
+          <input 
+            id="categoryProductName" 
+            class="swal2-input" 
+            placeholder="Tên danh mục" 
+            value="${categoryProduct?.categoryProductName || ''}" 
+            style="border: 1px solid #4A90E2; border-radius: 4px; padding: 10px;">
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonColor: '#4A90E2',
+      cancelButtonColor: '#d33',
+      confirmButtonText: id ? 'Cập nhật' : 'Thêm mới',
+      cancelButtonText: 'Huỷ',
+      preConfirm: () => {
+        return id 
+          ? { 
+              categoryProductID: id,
+              categoryProductName: document.getElementById('categoryProductName').value 
+            }
+          : {
+              categoryProductID: document.getElementById('categoryProductID').value,
+              categoryProductName: document.getElementById('categoryProductName').value
+            };
+      }
+    });
+  
+    if (formValues) {
+      try {
+        if (id) {
+          await apiClient.put(`/api/CategoryProducts/Update/${id}`, formValues);
+          Swal.fire(
+            'Đã cập nhật!',
+            'Danh mục đã được cập nhật thành công.',
+            'success'
+          );
+        } else {
+          await apiClient.post('/api/CategoryProducts/Create', formValues);
+          Swal.fire(
+            'Đã thêm!',
+            'Danh mục đã được thêm mới thành công.',
+            'success'
+          );
+        }
+  
+        // Refresh category list
+        const response = await apiClient.get('/api/CategoryProducts/GetAll');
+        setCategoryProducts(response.data);
+      } catch (error) {
+        console.error('Lỗi khi lưu danh mục:', error);
+        Swal.fire(
+          'Lỗi!',
+          'Đã có lỗi xảy ra khi lưu danh mục.',
+          'error'
+        );
+      }
     }
-
-    try {
-      const response = await apiClient.post('/api/CategoryProducts/Create', { categoryProductName });
-      setCategoryProducts([...categoryProducts, response.data]); // Cập nhật danh sách ngay sau khi thêm
-      setCategoryProductName('');
-    } catch (error) {
-      console.error('Failed to create category product', error);
-    }
   };
+  
 
   return (
-    <div className="container mx-auto p-6 max-w-screen-lg">
-      <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Manage Category Products</h1>
-
-      <form className="mb-12 flex flex-col md:flex-row items-center justify-center gap-4" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className="p-4 border border-gray-300 rounded-lg flex-grow max-w-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={categoryProductName}
-          onChange={(e) => setCategoryProductName(e.target.value)}
-          placeholder="Enter new category product"
-          required
-        />
-        <button 
-          type="submit" 
-          className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
-        >
-          Create
-        </button>
-      </form>
-
-      {!selectedCategory ? (
-        <div className="mb-12">
-          <h2 className="text-3xl font-semibold mb-4 text-gray-700 text-center">Categories</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {categoryProducts.map((category) => (
-              <div 
-                key={category.categoryProductID}
-                onClick={() => handleCategoryClick(category)}
-                className="p-6 bg-white shadow-lg rounded-lg flex flex-col items-center text-center cursor-pointer hover:bg-gray-100 transition duration-300"
-              >
-                <FaTags className="text-blue-500 text-4xl mb-4" />
-                <span className="text-lg font-semibold text-gray-800">{category.categoryProductName}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Danh mục sản phẩm</h1>
+      <button 
+        onClick={() => handleEditOrAdd()}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+      >
+        Thêm mới danh mục
+      </button>
+      {loading ? (
+        <p>Đang tải...</p>
       ) : (
-        <div>
-          <button
-            onClick={handleBackClick}
-            className="mb-8 px-6 py-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition duration-300"
-          >
-            Back to Categories
-          </button>
-
-          <div className="mt-12">
-            <h2 className="text-3xl font-semibold mb-4 text-gray-700 text-center">Products in {selectedCategory.categoryProductName}</h2>
-            {noProductsMessage ? (
-              <p className="text-center text-red-500">{noProductsMessage}</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {productDetails.map((product) => (
-                  <div 
-                    key={product.productID}
-                    className="p-6 bg-white shadow-lg rounded-lg flex flex-col items-center text-center hover:bg-gray-100 transition duration-300"
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {categoryProducts.map((categoryProduct) => (
+              <tr key={categoryProduct.categoryProductID}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{categoryProduct.categoryProductID}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{categoryProduct.categoryProductName}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <button 
+                    onClick={() => handleEditOrAdd(categoryProduct.categoryProductID)}
+                    className="text-blue-500 hover:text-blue-700 mr-4"
                   >
-                    <FaTags className="text-blue-500 text-4xl mb-4" />
-                    <span className="text-lg font-semibold text-gray-800">{product.productName}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+                    Chỉnh sửa
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(categoryProduct.categoryProductID)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Xoá
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
 };
 
-export default CategoryProductPage;
+export default CategoryProductsPage;
